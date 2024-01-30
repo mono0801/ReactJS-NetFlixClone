@@ -1,18 +1,17 @@
-import { motion } from "framer-motion";
-import { useState } from "react";
+import { motion, useAnimate, useAnimation, useScroll } from "framer-motion";
+import { useEffect, useState } from "react";
 import { Link, useMatch } from "react-router-dom";
 import styled from "styled-components";
 import { useDetectClickOutside } from "react-detect-click-outside";
 
 // 상단 헤더에 위치할 네비게이션 바
-const Nav = styled.nav`
+const Nav = styled(motion.nav)`
     display: flex;
     justify-content: space-between;
     align-items: center;
     position: fixed;
     width: 100%;
     top: 0;
-    background-color: black;
     font-size: 14px;
     padding: 15px 20px;
     color: white;
@@ -76,8 +75,16 @@ const Search = styled.span`
 `;
 // 돋보기 클릭 시 나타나는 input 검색창
 const Input = styled(motion.input)`
+    left: -190px;
+    padding: 7px 13px;
+    padding-left: 40px;
     position: absolute;
-    left: -150px;
+    z-index: -1;
+    color: white;
+    font-size: 13px;
+    background-color: transparent;
+    border: 1px solid ${(props) => props.theme.white.lighter};
+    border-radius: 10px;
     // 애니메이션이 시작되는 위치 설정
     transform-origin: right center;
 `;
@@ -94,29 +101,71 @@ const logoVariants = {
         },
     },
 };
+// 내비게이션 애니메이션
+const navVariants = {
+    top: {
+        backgroundColor: "rgba(0, 0, 0, 0)",
+        color: "rgba(0, 0, 0, 1)",
+    },
+    scroll: {
+        backgroundColor: "rgba(0, 0, 0, 1)",
+        color: "${(props) => props.theme.white.lighter}",
+    },
+};
+// 내비게이션 항목 애니메이션
+const itemVariants = {
+    top: {
+        color: "rgba(0, 0, 0, 1)",
+    },
+    scroll: {
+        color: "#fff",
+    },
+};
 
 function Header() {
+    // 현재 우리가 어느 route에 있는지 반환한다
+    const homeMatch = useMatch("/");
+    const tvMatch = useMatch("tv");
     // 검색창이 활성화 되었는지 판단
     const [searchOpen, setSearchOpen] = useState(false);
-    const toggleSearch = () => setSearchOpen((prev) => !prev);
+    const toggleSearch = () => {
+        setSearchOpen((prev) => !prev);
+    };
     const disableSearch = () => setSearchOpen(false);
     // 검색창 외부 영역 클릭 시 검색창 비활성화
     const outRef = useDetectClickOutside({
         onTriggered: disableSearch,
-        disableClick: true,
+        // esc 누르면 비활성화 되는 기능 해제
+        disableKeys: true,
     });
     // 네비게이션 바의 항목이 hover중 인지 판단
     const [itemHover1, setItemHover1] = useState(false);
     const toggleItem1 = () => setItemHover1((prev) => !prev);
     const [itemHover2, setItemHover2] = useState(false);
     const toggleItem2 = () => setItemHover2((prev) => !prev);
-
-    // 현재 우리가 어느 route에 있는지 반환한다
-    const homeMatch = useMatch("/");
-    const tvMatch = useMatch("tv");
+    // 특정 코드를 통해 navgation에 애니메이션을 실행
+    const navAnimaiton = useAnimation();
+    const itemAnimation = useAnimation();
+    // scroll이 얼만큼 내려갔는지 퍼센트 반환
+    const { scrollY } = useScroll();
+    // scroll 위치에 따른 애니메이션 효과 실행
+    useEffect(() => {
+        scrollY.onChange(() => {
+            if (scrollY.get() > 30) {
+                navAnimaiton.start("scroll");
+            } else {
+                navAnimaiton.start("top");
+            }
+            if (scrollY.get() > 10) {
+                itemAnimation.start("scroll");
+            } else {
+                itemAnimation.start("top");
+            }
+        });
+    }, [scrollY]);
 
     return (
-        <Nav>
+        <Nav variants={navVariants} animate={navAnimaiton} initial={"top"}>
             <Col>
                 <Link to={"/"}>
                     <Logo
@@ -132,7 +181,13 @@ function Header() {
                     </Logo>
                 </Link>
                 <Items>
-                    <Item onHoverStart={toggleItem1} onHoverEnd={toggleItem1}>
+                    <Item
+                        variants={itemVariants}
+                        animate={itemAnimation}
+                        initial={"top"}
+                        onHoverStart={toggleItem1}
+                        onHoverEnd={toggleItem1}
+                    >
                         <Link to={"/"}>
                             Home
                             {homeMatch && (
@@ -150,7 +205,13 @@ function Header() {
                             )}
                         </Link>
                     </Item>
-                    <Item onHoverStart={toggleItem2} onHoverEnd={toggleItem2}>
+                    <Item
+                        variants={itemVariants}
+                        animate={itemAnimation}
+                        initial={"top"}
+                        onHoverStart={toggleItem2}
+                        onHoverEnd={toggleItem2}
+                    >
                         <Link to={"tv"}>
                             TV Show
                             {tvMatch && (
