@@ -9,7 +9,8 @@ npm i recoil\
 npm react-beautiful-dnd -> (Drag & Drop)\
 npm i --save-dev @types/react-beautiful-dnd\
 npm install framer-motion@10.12.4\
-npm i react-router-dom
+npm i react-router-dom\
+npm i react-detect-click-outside -> (외부 영역 클릭 인식)
 
 # Getting Started with Create React App
 

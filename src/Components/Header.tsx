@@ -1,6 +1,8 @@
 import { motion } from "framer-motion";
+import { useState } from "react";
 import { Link, useMatch } from "react-router-dom";
 import styled from "styled-components";
+import { useDetectClickOutside } from "react-detect-click-outside";
 
 // 상단 헤더에 위치할 네비게이션 바
 const Nav = styled.nav`
@@ -12,7 +14,7 @@ const Nav = styled.nav`
     top: 0;
     background-color: black;
     font-size: 14px;
-    padding: 20px 60px;
+    padding: 15px 20px;
     color: white;
 `;
 // 네비게이션 바에 속한 컴포넌트
@@ -47,9 +49,6 @@ const Item = styled(motion.li)`
     transition: color 0.3s ease-in-out;
     &:hover {
         color: ${(props) => props.theme.white.lighter};
-        span {
-            color: ${(props) => props.theme.white.darker};
-        }
     }
 `;
 // 항목 하이라이트 효과
@@ -58,9 +57,8 @@ const UnderBar = styled(motion.span)`
     width: 7px;
     height: 7px;
     border-radius: 50%;
-    bottom: -7px;
+    bottom: -9px;
     background-color: ${(props) => props.theme.red};
-
     // 가운데로 위치 시키기
     left: 0;
     right: 0;
@@ -68,10 +66,20 @@ const UnderBar = styled(motion.span)`
 `;
 // 검색창
 const Search = styled.span`
+    display: flex;
+    align-items: center;
+    position: relative;
     color: white;
     svg {
         height: 25px;
     }
+`;
+// 돋보기 클릭 시 나타나는 input 검색창
+const Input = styled(motion.input)`
+    position: absolute;
+    left: -150px;
+    // 애니메이션이 시작되는 위치 설정
+    transform-origin: right center;
 `;
 // 넷플릭스 로고 애니메이션
 const logoVariants = {
@@ -88,10 +96,25 @@ const logoVariants = {
 };
 
 function Header() {
+    // 검색창이 활성화 되었는지 판단
+    const [searchOpen, setSearchOpen] = useState(false);
+    const toggleSearch = () => setSearchOpen((prev) => !prev);
+    const disableSearch = () => setSearchOpen(false);
+    // 검색창 외부 영역 클릭 시 검색창 비활성화
+    const outRef = useDetectClickOutside({
+        onTriggered: disableSearch,
+        disableClick: true,
+    });
+    // 네비게이션 바의 항목이 hover중 인지 판단
+    const [itemHover1, setItemHover1] = useState(false);
+    const toggleItem1 = () => setItemHover1((prev) => !prev);
+    const [itemHover2, setItemHover2] = useState(false);
+    const toggleItem2 = () => setItemHover2((prev) => !prev);
+
     // 현재 우리가 어느 route에 있는지 반환한다
     const homeMatch = useMatch("/");
     const tvMatch = useMatch("tv");
-    console.log(homeMatch, tvMatch);
+
     return (
         <Nav>
             <Col>
@@ -109,23 +132,58 @@ function Header() {
                     </Logo>
                 </Link>
                 <Items>
-                    <Item>
+                    <Item onHoverStart={toggleItem1} onHoverEnd={toggleItem1}>
                         <Link to={"/"}>
                             Home
-                            {homeMatch && <UnderBar />}
+                            {homeMatch && (
+                                <UnderBar
+                                    layoutId="highlight"
+                                    animate={{
+                                        scaleX: itemHover1 ? 5.5 : 1,
+                                        scaleY: itemHover1 ? 0.25 : 1,
+                                        borderRadius: itemHover1 ? 0 : "50%",
+                                        backgroundColor: itemHover1
+                                            ? "#e5e5e5"
+                                            : "#E51013",
+                                    }}
+                                />
+                            )}
                         </Link>
                     </Item>
-                    <Item>
+                    <Item onHoverStart={toggleItem2} onHoverEnd={toggleItem2}>
                         <Link to={"tv"}>
                             TV Show
-                            {tvMatch && <UnderBar />}
+                            {tvMatch && (
+                                <UnderBar
+                                    layoutId="highlight"
+                                    animate={{
+                                        scaleX: itemHover2 ? 7.5 : 1,
+                                        scaleY: itemHover2 ? 0.25 : 1,
+                                        borderRadius: itemHover2 ? 0 : "50%",
+                                        backgroundColor: itemHover2
+                                            ? "#e5e5e5"
+                                            : "#E51013",
+                                    }}
+                                />
+                            )}
                         </Link>
                     </Item>
                 </Items>
             </Col>
             <Col>
-                <Search>
-                    <svg
+                <Search ref={outRef}>
+                    <Input
+                        animate={{
+                            scaleX: searchOpen ? 1 : 0,
+                            opacity: searchOpen ? 0.8 : 0,
+                        }}
+                        transition={{ type: "linear" }}
+                        placeholder="Search for Movie or TV show"
+                    />
+                    <motion.svg
+                        onClick={toggleSearch}
+                        animate={{ x: searchOpen ? -180 : 0 }}
+                        transition={{ type: "linear" }}
                         fill="currentColor"
                         viewBox="0 0 20 20"
                         xmlns="http://www.w3.org/2000/svg"
@@ -135,7 +193,7 @@ function Header() {
                             d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
                             clipRule="evenodd"
                         ></path>
-                    </svg>
+                    </motion.svg>
                 </Search>
             </Col>
         </Nav>
