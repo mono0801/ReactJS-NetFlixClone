@@ -1,10 +1,10 @@
 {
   "files": {
-    "main.js": "/ReactJS-NetFlixClone/static/js/main.5ef43a56.js",
+    "main.js": "/ReactJS-NetFlixClone/static/js/main.ec50fd4e.js",
     "index.html": "/ReactJS-NetFlixClone/index.html",
-    "main.5ef43a56.js.map": "/ReactJS-NetFlixClone/static/js/main.5ef43a56.js.map"
+    "main.ec50fd4e.js.map": "/ReactJS-NetFlixClone/static/js/main.ec50fd4e.js.map"
   },
   "entrypoints": [
-    "static/js/main.5ef43a56.js"
+    "static/js/main.ec50fd4e.js"
   ]
 }
