@@ -1,4 +1,5 @@
-import { motion, useAnimate, useAnimation, useScroll } from "framer-motion";
+// 상단 헤더
+import { motion, useAnimation, useScroll } from "framer-motion";
 import { useEffect, useState } from "react";
 import { Link, useMatch } from "react-router-dom";
 import styled from "styled-components";
@@ -50,7 +51,7 @@ const Item = styled(motion.li)`
         color: ${(props) => props.theme.white.lighter};
     }
 `;
-// 항목 하이라이트 효과
+// 현재 접속된 항목 하이라이트 효과
 const UnderBar = styled(motion.span)`
     position: absolute;
     width: 7px;
@@ -112,15 +113,6 @@ const navVariants = {
         color: "${(props) => props.theme.white.lighter}",
     },
 };
-// 내비게이션 항목 애니메이션
-const itemVariants = {
-    top: {
-        color: "rgba(0, 0, 0, 1)",
-    },
-    scroll: {
-        color: "#fff",
-    },
-};
 
 function Header() {
     // 현재 우리가 어느 route에 있는지 반환한다
@@ -145,7 +137,6 @@ function Header() {
     const toggleItem2 = () => setItemHover2((prev) => !prev);
     // 특정 코드를 통해 navgation에 애니메이션을 실행
     const navAnimaiton = useAnimation();
-    const itemAnimation = useAnimation();
     // scroll이 얼만큼 내려갔는지 퍼센트 반환
     const { scrollY } = useScroll();
     // scroll 위치에 따른 애니메이션 효과 실행
@@ -155,11 +146,6 @@ function Header() {
                 navAnimaiton.start("scroll");
             } else {
                 navAnimaiton.start("top");
-            }
-            if (scrollY.get() > 10) {
-                itemAnimation.start("scroll");
-            } else {
-                itemAnimation.start("top");
             }
         });
     }, [scrollY]);
@@ -181,13 +167,7 @@ function Header() {
                     </Logo>
                 </Link>
                 <Items>
-                    <Item
-                        variants={itemVariants}
-                        animate={itemAnimation}
-                        initial={"top"}
-                        onHoverStart={toggleItem1}
-                        onHoverEnd={toggleItem1}
-                    >
+                    <Item onHoverStart={toggleItem1} onHoverEnd={toggleItem1}>
                         <Link to={"/"}>
                             Home
                             {homeMatch && (
@@ -205,13 +185,7 @@ function Header() {
                             )}
                         </Link>
                     </Item>
-                    <Item
-                        variants={itemVariants}
-                        animate={itemAnimation}
-                        initial={"top"}
-                        onHoverStart={toggleItem2}
-                        onHoverEnd={toggleItem2}
-                    >
+                    <Item onHoverStart={toggleItem2} onHoverEnd={toggleItem2}>
                         <Link to={"tv"}>
                             TV Show
                             {tvMatch && (
