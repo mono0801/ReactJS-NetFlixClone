@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useQuery } from "react-query";
 import styled from "styled-components";
 import { getMovies, IGetMoviesResult } from "../api";
-import { makeImagePath } from "../utils";
+import { makeImagePath, useWindowDimensions } from "../utils";
 
 const Wrapper = styled.div`
     background: black;
@@ -40,34 +40,28 @@ const OverView = styled.p`
     font-size: 20px;
 `;
 // 배너 하단에 들어갈 영화 포스터 슬라이드
-const Slider = styled.div`
+const SliderWrapper = styled.div`
     position: relative;
     top: -100px;
 `;
 // 슬라이드에 들어갈 div
-const Row = styled(motion.div)`
+const Slider = styled(motion.div)`
     width: 100%;
     display: grid;
     grid-template-columns: repeat(6, 1fr);
-    gap: 10px;
+    gap: 5px;
     position: absolute;
 `;
-// Row안에 들어갈 영화 포스터 div
-const Box = styled(motion.div)`
-    background-color: white;
+// Slider 안에 들어갈 영화 포스터 div
+const SliderPoster = styled(motion.div)<{ bgPhoto: string }>`
     height: 200px;
-    color: red;
-    font-size: 200%;
+    background-color: white;
+    background-image: url(${(props) => props.bgPhoto});
+    background-size: cover;
+    background-position: center center;
 `;
-// Row 슬라이드 애니메이션 설정
-const rowVariants = {
-    hidden: {
-        x: window.outerWidth + 10,
-        opacity: 0,
-    },
-    visible: { x: 0, opacity: 1 },
-    exit: { x: -window.outerWidth - 10, opacity: 0 },
-};
+// 슬라이드에서 한 번에 보여줄 영화 갯수
+const offset = 6;
 
 function Home() {
     // themoviedb.org로 부터 가져온 영화 정보
@@ -75,10 +69,27 @@ function Home() {
         ["movies", "nowPlaying"],
         getMovies
     );
-    // slider에서 현재 Box가 무엇인지 식별
+    // SliderWrapper에서 현재 Slider가 무엇인지 식별
     const [index, setIndex] = useState(0);
     // index 증가
-    const increaseIndex = () => setIndex((prev) => prev + 1);
+    const increaseIndex = () => {
+        if (data) {
+            if (leaving) return;
+
+            toggleLeaving();
+            // 가져온 영화 갯수
+            const totalMovies = data.results.length - 1;
+            // 가져온 영화 갯수 / 6 : 보여줘야될 Slider 갯수
+            const maxIndex = Math.floor(totalMovies / offset) - 1;
+            // index가 Slider 갯수를 넘을 경우 0으로 초기화
+            setIndex((prev) => (prev === maxIndex ? 0 : prev + 1));
+        }
+    };
+    // slider 애니메이션 중첩 실행 방지
+    const [leaving, setLeaving] = useState(false);
+    const toggleLeaving = () => setLeaving((prev) => !prev);
+    // 현재 윈도우 사이트의 너비
+    const width = useWindowDimensions();
 
     // <></> : fragment -> 많은 요소를 공통된 부모 없이 연이어서 리턴할 때 사용
     return (
@@ -98,23 +109,40 @@ function Home() {
                         <Title>{data?.results[0].title}</Title>
                         <OverView>{data?.results[0].overview}</OverView>
                     </Banner>
-                    <Slider>
+                    <SliderWrapper>
                         {/* 요소가 생기거나 사라질 때 효과 부여 */}
-                        <AnimatePresence>
-                            <Row
+                        {/* onExitComplete : 애니메이션이 완전히 끝날 때 실행 */}
+                        <AnimatePresence
+                            initial={false}
+                            onExitComplete={toggleLeaving}
+                        >
+                            <Slider
                                 key={index}
-                                variants={rowVariants}
-                                initial="hidden"
-                                animate="visible"
-                                exit="exit"
-                                transition={{ type: "tween", duration: 0.5 }}
+                                initial={{ x: width + 10 }}
+                                animate={{ x: 0 }}
+                                exit={{ x: -width - 10 }}
+                                transition={{ type: "tween", duration: 1 }}
                             >
-                                {[1, 2, 3, 4, 5, 6].map((i) => (
-                                    <Box key={i}>{i}</Box>
-                                ))}
-                            </Row>
+                                {/* 첫번째 영화는 배너에 사용했으므로 제외 */}
+                                {data?.results
+                                    .slice(1)
+                                    .slice(
+                                        // 6개씩 나눠서 보여줌
+                                        offset * index,
+                                        offset * index + offset
+                                    )
+                                    .map((movie) => (
+                                        <SliderPoster
+                                            key={movie.id}
+                                            bgPhoto={makeImagePath(
+                                                movie.backdrop_path,
+                                                "w500"
+                                            )}
+                                        />
+                                    ))}
+                            </Slider>
                         </AnimatePresence>
-                    </Slider>
+                    </SliderWrapper>
                 </>
             )}
         </Wrapper>
