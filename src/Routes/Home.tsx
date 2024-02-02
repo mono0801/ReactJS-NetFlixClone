@@ -69,14 +69,36 @@ const SliderPoster = styled(motion.div)<{ bgPhoto: string }>`
         transform-origin: center right;
     }
 `;
+// Slider 안의 영화 정보
+const SliderPosterInfo = styled(motion.div)`
+    width: 100%;
+    padding: 10px;
+    position: absolute;
+    bottom: 0;
+    background-color: ${(props) => props.theme.black.darker};
+    opacity: 0;
+    h4 {
+        text-align: center;
+        font-size: 18px;
+    }
+`;
 // SLider 안의 영화 포스터 애니메이션 설정
 const sliderPosterVariants = {
-    normal: {
-        scale: 1,
-    },
+    normal: { scale: 1 },
     hover: {
         scale: 1.3,
         y: -50,
+        transition: {
+            delay: 0.35,
+            duration: 0.2,
+            type: "tween",
+        },
+    },
+};
+// Slider 안의 영화 정보 애니메이션 설정
+const SliderPosterInfoVariants = {
+    hover: {
+        opacity: 1,
         transition: {
             delay: 0.35,
             duration: 0.2,
@@ -167,7 +189,16 @@ function Home() {
                                                     movie.poster_path,
                                                 "w500"
                                             )}
-                                        />
+                                        >
+                                            {/* 부모의 variants가 자동으로 상속된다 */}
+                                            <SliderPosterInfo
+                                                variants={
+                                                    SliderPosterInfoVariants
+                                                }
+                                            >
+                                                <h4>{movie.title}</h4>
+                                            </SliderPosterInfo>
+                                        </SliderPoster>
                                     ))}
                             </Slider>
                         </AnimatePresence>
