@@ -9,6 +9,7 @@ import { makeImagePath, useWindowDimensions } from "../utils";
 const Wrapper = styled.div`
     background: black;
     overflow-x: hidden;
+    padding-bottom: 200px;
 `;
 // API 로딩 중일 때 표시
 const Loader = styled.div`
@@ -59,7 +60,30 @@ const SliderPoster = styled(motion.div)<{ bgPhoto: string }>`
     background-image: url(${(props) => props.bgPhoto});
     background-size: cover;
     background-position: center center;
+    // 첫번째 슬라이더의 포스터는 오른쪽으로 커지게
+    &:first-child {
+        transform-origin: center left;
+    }
+    // 마지막 슬라이더의 포스터는 왼쪽으로 커지게
+    &:last-child {
+        transform-origin: center right;
+    }
 `;
+// SLider 안의 영화 포스터 애니메이션 설정
+const sliderPosterVariants = {
+    normal: {
+        scale: 1,
+    },
+    hover: {
+        scale: 1.3,
+        y: -50,
+        transition: {
+            delay: 0.35,
+            duration: 0.2,
+            type: "tween",
+        },
+    },
+};
 // 슬라이드에서 한 번에 보여줄 영화 갯수
 const offset = 6;
 
@@ -134,8 +158,13 @@ function Home() {
                                     .map((movie) => (
                                         <SliderPoster
                                             key={movie.id}
+                                            variants={sliderPosterVariants}
+                                            initial="normal"
+                                            whileHover={"hover"}
+                                            transition={{ type: "tween" }}
                                             bgPhoto={makeImagePath(
-                                                movie.backdrop_path,
+                                                movie.backdrop_path ||
+                                                    movie.poster_path,
                                                 "w500"
                                             )}
                                         />
