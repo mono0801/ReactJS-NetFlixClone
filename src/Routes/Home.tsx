@@ -86,12 +86,35 @@ const SliderPosterInfo = styled(motion.div)`
         font-size: 18px;
     }
 `;
+// SliderPoster 클릭 시 확대되는 상세 정보창을 끄기 위한 배경 오버레이
+const Overlay = styled(motion.div)`
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+`;
+// SliderPoster 클릭 시 확대되는 상세 정보창
+const SliderPosterDetail = styled(motion.div)`
+    width: 60vw;
+    height: 70vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    background-color: whitesmoke;
+    color: black;
+`;
 // SLider 안의 영화 포스터 애니메이션 설정
 const sliderPosterVariants = {
     normal: { scale: 1 },
     hover: {
         scale: 1.3,
         y: -50,
+        borderRadius: "20px",
         transition: {
             delay: 0.35,
             duration: 0.2,
@@ -102,7 +125,9 @@ const sliderPosterVariants = {
 // Slider 안의 영화 정보 애니메이션 설정
 const SliderPosterInfoVariants = {
     hover: {
-        opacity: 1,
+        opacity: 0.8,
+        borderBottomLeftRadius: "20px",
+        borderBottomRightRadius: "20px",
         transition: {
             delay: 0.35,
             duration: 0.2,
@@ -151,6 +176,10 @@ function Home() {
     // 현재 우리가 어느 route에 있는지 확인한다
     const detailMovieMatch: PathMatch<string> | null =
         useMatch("/movies/:movieId");
+    // 영화 상세보기 밖의 오버레이 클릭 시 상세보기 창 닫기
+    const onOverlayClicked = () => {
+        navigate(`/`);
+    };
 
     // <></> : fragment -> 많은 요소를 공통된 부모 없이 연이어서 리턴할 때 사용
     return (
@@ -226,19 +255,18 @@ function Home() {
                     </SliderWrapper>
                     <AnimatePresence>
                         {detailMovieMatch ? (
-                            <motion.div
-                                layoutId={detailMovieMatch.params.movieId}
-                                style={{
-                                    position: "absolute",
-                                    width: "40vw",
-                                    height: "80vh",
-                                    backgroundColor: "whitesmoke",
-                                    top: 50,
-                                    left: 0,
-                                    right: 0,
-                                    margin: "0 auto",
-                                }}
-                            />
+                            <>
+                                <Overlay
+                                    onClick={onOverlayClicked}
+                                    animate={{ opacity: 1 }}
+                                    exit={{ opacity: 0 }}
+                                />
+                                <SliderPosterDetail
+                                    layoutId={detailMovieMatch.params.movieId}
+                                >
+                                    hello
+                                </SliderPosterDetail>
+                            </>
                         ) : null}
                     </AnimatePresence>
                 </>
