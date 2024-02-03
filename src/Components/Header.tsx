@@ -118,6 +118,7 @@ function Header() {
     // 현재 우리가 어느 route에 있는지 반환한다
     const homeMatch = useMatch("/");
     const tvMatch = useMatch("tv");
+    const movieMatch = useMatch("/movies/:movieId");
     // 검색창이 활성화 되었는지 판단
     const [searchOpen, setSearchOpen] = useState(false);
     const toggleSearch = () => {
@@ -170,7 +171,7 @@ function Header() {
                     <Item onHoverStart={toggleItem1} onHoverEnd={toggleItem1}>
                         <Link to={"/"}>
                             Home
-                            {homeMatch && (
+                            {(homeMatch || movieMatch) && (
                                 <UnderBar
                                     layoutId="highlight"
                                     animate={{

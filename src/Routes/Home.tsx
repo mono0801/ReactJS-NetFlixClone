@@ -2,6 +2,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
 import { useQuery } from "react-query";
+import { PathMatch, useMatch, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { getMovies, IGetMoviesResult } from "../api";
 import { makeImagePath, useWindowDimensions } from "../utils";
@@ -42,6 +43,8 @@ const OverView = styled.p`
 `;
 // 배너 하단에 들어갈 영화 포스터 슬라이드
 const SliderWrapper = styled.div`
+    margin-left: 60px;
+    margin-right: 60px;
     position: relative;
     top: -100px;
 `;
@@ -60,6 +63,7 @@ const SliderPoster = styled(motion.div)<{ bgPhoto: string }>`
     background-image: url(${(props) => props.bgPhoto});
     background-size: cover;
     background-position: center center;
+    cursor: pointer;
     // 첫번째 슬라이더의 포스터는 오른쪽으로 커지게
     &:first-child {
         transform-origin: center left;
@@ -134,8 +138,19 @@ function Home() {
     // slider 애니메이션 중첩 실행 방지
     const [leaving, setLeaving] = useState(false);
     const toggleLeaving = () => setLeaving((prev) => !prev);
-    // 현재 윈도우 사이트의 너비
+    // 현재 윈도우 사이트의 너비 반환하는 함수
     const width = useWindowDimensions();
+    // 해당 url을 통해 필요한 부분만 재랜더링
+    // <useNavigate>의 경우, 이동 후 추가적인 동작이 필요할 때에 사용한다.
+    // <Link>의 경우, 클릭 시 바로 이동하게 하기 위한 심플한 동작을 위해 주로 사용
+    const navigate = useNavigate();
+    // slider 클릭 시 해당 영화의 ID 반환하는 함수
+    const onSliderPosterClicked = (movieId: number) => {
+        navigate(`/movies/${movieId}`);
+    };
+    // 현재 우리가 어느 route에 있는지 확인한다
+    const detailMovieMatch: PathMatch<string> | null =
+        useMatch("/movies/:movieId");
 
     // <></> : fragment -> 많은 요소를 공통된 부모 없이 연이어서 리턴할 때 사용
     return (
@@ -164,9 +179,9 @@ function Home() {
                         >
                             <Slider
                                 key={index}
-                                initial={{ x: width + 10 }}
+                                initial={{ x: width }}
                                 animate={{ x: 0 }}
-                                exit={{ x: -width - 10 }}
+                                exit={{ x: -width }}
                                 transition={{ type: "tween", duration: 1 }}
                             >
                                 {/* 첫번째 영화는 배너에 사용했으므로 제외 */}
@@ -180,10 +195,16 @@ function Home() {
                                     .map((movie) => (
                                         <SliderPoster
                                             key={movie.id}
+                                            layoutId={movie.id + ""}
                                             variants={sliderPosterVariants}
                                             initial="normal"
                                             whileHover={"hover"}
                                             transition={{ type: "tween" }}
+                                            // onClick의 onSliderPosterClicked 함수에 movie.id 인자를 넘겨줘야 하므로 익명함수를 사용한다
+                                            // 익명함수가 아닐 경우 인자를 넘겨주기 전에 함수가 실행된다
+                                            onClick={() =>
+                                                onSliderPosterClicked(movie.id)
+                                            }
                                             bgPhoto={makeImagePath(
                                                 movie.backdrop_path ||
                                                     movie.poster_path,
@@ -203,6 +224,23 @@ function Home() {
                             </Slider>
                         </AnimatePresence>
                     </SliderWrapper>
+                    <AnimatePresence>
+                        {detailMovieMatch ? (
+                            <motion.div
+                                layoutId={detailMovieMatch.params.movieId}
+                                style={{
+                                    position: "absolute",
+                                    width: "40vw",
+                                    height: "80vh",
+                                    backgroundColor: "whitesmoke",
+                                    top: 50,
+                                    left: 0,
+                                    right: 0,
+                                    margin: "0 auto",
+                                }}
+                            />
+                        ) : null}
+                    </AnimatePresence>
                 </>
             )}
         </Wrapper>
