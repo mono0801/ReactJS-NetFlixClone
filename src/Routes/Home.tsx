@@ -63,6 +63,7 @@ const SliderPoster = styled(motion.div)<{ bgPhoto: string }>`
     background-image: url(${(props) => props.bgPhoto});
     background-size: cover;
     background-position: center center;
+    overflow: hidden;
     cursor: pointer;
     // 첫번째 슬라이더의 포스터는 오른쪽으로 커지게
     &:first-child {
@@ -105,8 +106,32 @@ const SliderPosterDetail = styled(motion.div)`
     right: 0;
     bottom: 0;
     margin: auto;
-    background-color: whitesmoke;
-    color: black;
+    background-color: ${(props) => props.theme.black.lighter};
+    border-radius: 20px;
+    overflow: hidden;
+`;
+// SliderPoster 클릭 시 확대되는 상세 정보창에 들어갈 영화 포스터
+const SliderPosterDetailCover = styled.div`
+    width: 100%;
+    height: 400px;
+    background-size: cover;
+    background-position: center center;
+`;
+// SliderPoster 클릭 시 확대되는 상세 정보창에 들어갈 영화 제목
+const SliderPosterDetailTitle = styled.h2`
+    color: ${(props) => props.theme.white.lighter};
+    font-size: 28px;
+    position: relative;
+    top: -50px;
+    text-align: center;
+`;
+// SliderPoster 클릭 시 확대되는 상세 정보창에 들어갈 영화 줄거리
+const SliderPosterDetailOverView = styled.p`
+    padding: 20px;
+    text-align: center;
+    position: relative;
+    top: -40px;
+    color: ${(props) => props.theme.white.lighter};
 `;
 // SLider 안의 영화 포스터 애니메이션 설정
 const sliderPosterVariants = {
@@ -126,8 +151,6 @@ const sliderPosterVariants = {
 const SliderPosterInfoVariants = {
     hover: {
         opacity: 0.8,
-        borderBottomLeftRadius: "20px",
-        borderBottomRightRadius: "20px",
         transition: {
             delay: 0.35,
             duration: 0.2,
@@ -180,7 +203,14 @@ function Home() {
     const onOverlayClicked = () => {
         navigate(`/`);
     };
-
+    // slider에서 클릭한 영화의 Id 가져오기
+    const clickedMovieId =
+        detailMovieMatch?.params.movieId &&
+        data?.results.find(
+            // 문자열 앞에 +를 붙이면 숫자열이 된다 => +"string"
+            (movie) => String(movie.id) === detailMovieMatch.params.movieId
+        );
+    console.log(clickedMovieId);
     // <></> : fragment -> 많은 요소를 공통된 부모 없이 연이어서 리턴할 때 사용
     return (
         <Wrapper>
@@ -264,7 +294,24 @@ function Home() {
                                 <SliderPosterDetail
                                     layoutId={detailMovieMatch.params.movieId}
                                 >
-                                    hello
+                                    {clickedMovieId && (
+                                        <>
+                                            <SliderPosterDetailCover
+                                                style={{
+                                                    backgroundImage: `linear-gradient(to top, black, transparent), url(${makeImagePath(
+                                                        clickedMovieId.backdrop_path,
+                                                        "w500"
+                                                    )})`,
+                                                }}
+                                            />
+                                            <SliderPosterDetailTitle>
+                                                {clickedMovieId.title}
+                                            </SliderPosterDetailTitle>
+                                            <SliderPosterDetailOverView>
+                                                {clickedMovieId.overview}
+                                            </SliderPosterDetailOverView>
+                                        </>
+                                    )}
                                 </SliderPosterDetail>
                             </>
                         ) : null}
