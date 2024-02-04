@@ -1,9 +1,10 @@
 // 상단 헤더
 import { motion, useAnimation, useScroll } from "framer-motion";
 import { useEffect, useState } from "react";
-import { Link, useMatch } from "react-router-dom";
+import { Link, useMatch, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { useDetectClickOutside } from "react-detect-click-outside";
+import { useForm } from "react-hook-form";
 
 // 상단 헤더에 위치할 네비게이션 바
 const Nav = styled(motion.nav)`
@@ -52,20 +53,30 @@ const Item = styled(motion.li)`
     }
 `;
 // 현재 접속된 항목 하이라이트 효과
-const UnderBar = styled(motion.span)`
+const CurrentRedDot = styled(motion.span)`
     position: absolute;
     width: 7px;
     height: 7px;
     border-radius: 50%;
     bottom: -9px;
     background-color: ${(props) => props.theme.red};
+    right: -9px;
+    top: -3px;
+`;
+// 항목 Hover 애니메이션용
+const HighLight = styled(motion.span)`
+    position: absolute;
+    width: 100%;
+    height: 1px;
+    background-color: ${(props) => props.theme.white.lighter};
     // 가운데로 위치 시키기
-    left: 0;
     right: 0;
+    left: 0;
+    bottom: -4px;
     margin: 0 auto;
 `;
 // 검색창
-const Search = styled.span`
+const Search = styled.form`
     display: flex;
     align-items: center;
     position: relative;
@@ -113,6 +124,10 @@ const navVariants = {
         color: "${(props) => props.theme.white.lighter}",
     },
 };
+// 검색창 인터페이스
+interface IForm {
+    keyword: string;
+}
 
 function Header() {
     // 현재 우리가 어느 route에 있는지 반환한다
@@ -150,6 +165,14 @@ function Header() {
             }
         });
     }, [scrollY]);
+    // Input에서 입력한 값을 가져오기
+    const { register, handleSubmit } = useForm<IForm>();
+    // 특정 라우터로 보내기
+    const navigate = useNavigate();
+    // Input에서 가져온 값이 유효한지 검사
+    const onValid = (data: IForm) => {
+        navigate(`/search?keyword=${data.keyword}`);
+    };
 
     return (
         <Nav variants={navVariants} animate={navAnimaiton} initial={"top"}>
@@ -172,43 +195,41 @@ function Header() {
                         <Link to={"/"}>
                             Home
                             {(homeMatch || movieMatch) && (
-                                <UnderBar
-                                    layoutId="highlight"
-                                    animate={{
-                                        scaleX: itemHover1 ? 5.5 : 1,
-                                        scaleY: itemHover1 ? 0.25 : 1,
-                                        borderRadius: itemHover1 ? 0 : "50%",
-                                        backgroundColor: itemHover1
-                                            ? "#e5e5e5"
-                                            : "#E51013",
-                                    }}
-                                />
+                                <CurrentRedDot layoutId="current" />
                             )}
+                            <HighLight
+                                initial={{
+                                    scaleX: 0,
+                                }}
+                                animate={{
+                                    scaleX: itemHover1 ? 1 : 0,
+                                }}
+                            />
                         </Link>
                     </Item>
                     <Item onHoverStart={toggleItem2} onHoverEnd={toggleItem2}>
                         <Link to={"tv"}>
                             TV Show
-                            {tvMatch && (
-                                <UnderBar
-                                    layoutId="highlight"
-                                    animate={{
-                                        scaleX: itemHover2 ? 7.5 : 1,
-                                        scaleY: itemHover2 ? 0.25 : 1,
-                                        borderRadius: itemHover2 ? 0 : "50%",
-                                        backgroundColor: itemHover2
-                                            ? "#e5e5e5"
-                                            : "#E51013",
-                                    }}
-                                />
-                            )}
+                            {tvMatch && <CurrentRedDot layoutId="current" />}
+                            <HighLight
+                                initial={{
+                                    scaleX: 0,
+                                }}
+                                animate={{
+                                    scaleX: itemHover2 ? 1 : 0,
+                                }}
+                            />
                         </Link>
                     </Item>
                 </Items>
             </Col>
             <Col>
-                <Search ref={outRef}>
+                <Search onSubmit={handleSubmit(onValid)} ref={outRef}>
                     <Input
+                        {...register("keyword", {
+                            required: true,
+                            minLength: 2,
+                        })}
                         animate={{
                             scaleX: searchOpen ? 1 : 0,
                             opacity: searchOpen ? 0.8 : 0,

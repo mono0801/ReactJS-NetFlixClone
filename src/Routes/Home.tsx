@@ -98,7 +98,7 @@ const Overlay = styled(motion.div)`
 `;
 // SliderPoster 클릭 시 확대되는 상세 정보창
 const SliderPosterDetail = styled(motion.div)`
-    width: 60vw;
+    width: 40vw;
     height: 70vh;
     position: fixed;
     top: 0;
@@ -113,7 +113,7 @@ const SliderPosterDetail = styled(motion.div)`
 // SliderPoster 클릭 시 확대되는 상세 정보창에 들어갈 영화 포스터
 const SliderPosterDetailCover = styled.div`
     width: 100%;
-    height: 400px;
+    height: 350px;
     background-size: cover;
     background-position: center center;
 `;
