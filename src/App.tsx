@@ -13,6 +13,7 @@ function App() {
                 <Header />
                 <Routes>
                     <Route path="/tv" element={<Tv />} />
+                    <Route path="/tv/:tvId" element={<Home />} />
                     <Route path="/search" element={<Search />} />
                     <Route path="/" element={<Home />} />
                     <Route path="/Reactjs-netflixclone" element={<Home />} />
@@ -22,20 +23,5 @@ function App() {
         </QueryClientProvider>
     );
 }
-
-// function App() {
-//     return (
-//         <Router basename="/ReactJS-NetFlixClone/">
-//             <Header />
-//             <Routes>
-//                 <Route path="/tv" element={<Tv />} />
-//                 <Route path="/search" element={<Search />} />
-//                 <Route path="/" element={<Home />}>
-//                     <Route path="movies/:movieId" element={<Home />} />
-//                 </Route>
-//             </Routes>
-//         </Router>
-//     );
-// }
 
 export default App;
