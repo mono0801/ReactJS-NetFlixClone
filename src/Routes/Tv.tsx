@@ -1,5 +1,5 @@
 // TV 상영 프로그램 소개 화면
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, color, motion } from "framer-motion";
 import { useState } from "react";
 import { useQuery } from "react-query";
 import { PathMatch, useMatch, useNavigate } from "react-router-dom";
@@ -200,7 +200,7 @@ function Tv() {
     const detailMovieMatch: PathMatch<string> | null = useMatch("/tv/:tvId");
     // 영화 상세보기 밖의 오버레이 클릭 시 상세보기 창 닫기
     const onOverlayClicked = () => {
-        navigate(`/`);
+        navigate(`/tv`);
     };
     // slider에서 클릭한 영화의 Id 가져오기
     const clickedMovieId =

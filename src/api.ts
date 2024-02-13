@@ -1,4 +1,6 @@
 // themoviedb.org 사이트의 정보 api 키
+// https://api.themoviedb.org/3/movie/now_playing?language=ko&api_key=48325c3d1892253f6a5bb8d5d4d7cd0e
+// https://api.themoviedb.org/3/tv/popular?language=ko&api_key=48325c3d1892253f6a5bb8d5d4d7cd0e
 const API_KEY = "48325c3d1892253f6a5bb8d5d4d7cd0e";
 const BASE_PATH = "https://api.themoviedb.org/3/";
 
