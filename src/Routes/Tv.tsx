@@ -6,6 +6,7 @@ import { PathMatch, useMatch, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { getTves, IGetTvResult } from "../api";
 import { makeImagePath, useWindowDimensions } from "../utils";
+import { IoIosArrowDropright } from "react-icons/io";
 
 const Wrapper = styled.div`
     background: black;
@@ -46,11 +47,31 @@ const SliderWrapper = styled.div`
     margin-left: 60px;
     margin-right: 60px;
     position: relative;
-    top: -100px;
+    top: -200px;
+`;
+// 영화 포스터 슬라이드 상단
+const Sliderheader = styled.div`
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+`;
+// 영화 포스터 슬라이드 상단에 들어갈 슬라이더 이름
+const SliderTitle = styled.h4`
+    font-size: 150%;
+`;
+// 영화 포스터 슬라이드 화살표
+const SliderArrow = styled(motion.div)`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 150%;
+    cursor: pointer;
 `;
 // 슬라이드에 들어갈 div
 const Slider = styled(motion.div)`
     width: 100%;
+    margin-top: 15px;
     display: grid;
     grid-template-columns: repeat(6, 1fr);
     gap: 5px;
@@ -110,28 +131,42 @@ const SliderPosterDetail = styled(motion.div)`
     border-radius: 20px;
     overflow: hidden;
 `;
-// SliderPoster 클릭 시 확대되는 상세 정보창에 들어갈 영화 포스터
+// SliderPoster 클릭 시 확대되는 상세 정보창 상단에 들어갈 영화 사진
 const SliderPosterDetailCover = styled.div`
     width: 100%;
     height: 350px;
     background-size: cover;
     background-position: center center;
 `;
+// 상세 정보창에 들어갈 정보를 감싸는 container (포스터 + 영화 제목 + 줄거리)
+const SliderPosterDetailWrapper = styled.div`
+    position: relative;
+    top: -60px;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+`;
+// 상세 정보창에 들어갈 정보를 감싸는 wrapper (영화 제목 + 줄거리)
+const SliderPosterDetailContainer = styled.div`
+    display: grid;
+    grid-template-rows: 0.5fr auto;
+`;
 // SliderPoster 클릭 시 확대되는 상세 정보창에 들어갈 영화 제목
 const SliderPosterDetailTitle = styled.h2`
+    position: relative;
+    top: -10px;
     color: ${(props) => props.theme.white.lighter};
     font-size: 28px;
-    position: relative;
-    top: -50px;
     text-align: center;
 `;
 // SliderPoster 클릭 시 확대되는 상세 정보창에 들어갈 영화 줄거리
 const SliderPosterDetailOverView = styled.p`
     padding: 20px;
     text-align: center;
-    position: relative;
-    top: -40px;
     color: ${(props) => props.theme.white.lighter};
+`;
+// SliderPoster 클릭 시 확대되는 상세 정보창에 들어갈 영화 포스터
+const SliderPosterDetailPoster = styled.img`
+    margin-left: 15px;
 `;
 // SLider 안의 영화 포스터 애니메이션 설정
 const sliderPosterVariants = {
@@ -204,12 +239,12 @@ function Tv() {
     };
     // slider에서 클릭한 영화의 Id 가져오기
     const clickedMovieId =
-        detailMovieMatch?.params.movieId &&
+        detailMovieMatch?.params.tvId &&
         data?.results.find(
             // 문자열 앞에 +를 붙이면 숫자열이 된다 => +"string"
-            (movie) => String(movie.id) === detailMovieMatch.params.movieId
+            (movie) => String(movie.id) === detailMovieMatch.params.tvId
         );
-    console.log(clickedMovieId);
+
     // <></> : fragment -> 많은 요소를 공통된 부모 없이 연이어서 리턴할 때 사용
     return (
         <Wrapper>
@@ -218,7 +253,6 @@ function Tv() {
             ) : (
                 <>
                     <Banner
-                        onClick={increaseIndex}
                         // 영화 포스터 전달
                         bgPhoto={makeImagePath(
                             data?.results[0].backdrop_path || ""
@@ -229,6 +263,12 @@ function Tv() {
                         <OverView>{data?.results[0].overview}</OverView>
                     </Banner>
                     <SliderWrapper>
+                        <Sliderheader>
+                            <SliderTitle>Popular</SliderTitle>
+                            <SliderArrow onClick={increaseIndex}>
+                                <IoIosArrowDropright />
+                            </SliderArrow>
+                        </Sliderheader>
                         {/* 요소가 생기거나 사라질 때 효과 부여 */}
                         {/* onExitComplete : 애니메이션이 완전히 끝날 때 실행 */}
                         <AnimatePresence
@@ -291,7 +331,7 @@ function Tv() {
                                     exit={{ opacity: 0 }}
                                 />
                                 <SliderPosterDetail
-                                    layoutId={detailMovieMatch.params.movieId}
+                                    layoutId={detailMovieMatch.params.tvId}
                                 >
                                     {clickedMovieId && (
                                         <>
@@ -303,12 +343,23 @@ function Tv() {
                                                     )})`,
                                                 }}
                                             />
-                                            <SliderPosterDetailTitle>
-                                                {clickedMovieId.name}
-                                            </SliderPosterDetailTitle>
-                                            <SliderPosterDetailOverView>
-                                                {clickedMovieId.overview}
-                                            </SliderPosterDetailOverView>
+                                            <SliderPosterDetailWrapper>
+                                                <SliderPosterDetailPoster
+                                                    src={makeImagePath(
+                                                        clickedMovieId.poster_path,
+                                                        "w200"
+                                                    )}
+                                                />
+                                                <SliderPosterDetailContainer>
+                                                    <SliderPosterDetailTitle>
+                                                        {clickedMovieId.name}
+                                                    </SliderPosterDetailTitle>
+                                                    <SliderPosterDetailOverView>
+                                                        {clickedMovieId.overview ||
+                                                            "줄거리가 존재하지 않습니다"}
+                                                    </SliderPosterDetailOverView>
+                                                </SliderPosterDetailContainer>
+                                            </SliderPosterDetailWrapper>
                                         </>
                                     )}
                                 </SliderPosterDetail>

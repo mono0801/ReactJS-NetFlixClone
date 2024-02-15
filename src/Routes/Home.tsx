@@ -6,6 +6,7 @@ import { PathMatch, useMatch, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { getMovies, IGetMoviesResult } from "../api";
 import { makeImagePath, useWindowDimensions } from "../utils";
+import { IoIosArrowDropright } from "react-icons/io";
 
 const Wrapper = styled.div`
     background: black;
@@ -46,7 +47,7 @@ const SliderWrapper = styled.div`
     margin-left: 60px;
     margin-right: 60px;
     position: relative;
-    top: -100px;
+    top: -200px;
 `;
 // 영화 포스터 슬라이드 상단
 const Sliderheader = styled.div`
@@ -61,10 +62,11 @@ const SliderTitle = styled.h4`
 `;
 // 영화 포스터 슬라이드 화살표
 const SliderArrow = styled(motion.div)`
-    height: 20px;
-    width: 20px;
-    background-color: white;
-    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 150%;
+    cursor: pointer;
 `;
 // 슬라이드에 들어갈 div
 const Slider = styled(motion.div)`
@@ -129,7 +131,7 @@ const SliderPosterDetail = styled(motion.div)`
     border-radius: 20px;
     overflow: hidden;
 `;
-// SliderPoster 클릭 시 확대되는 상세 정보창에 들어갈 영화 포스터
+// SliderPoster 클릭 시 확대되는 상세 정보창 상단에 들어갈 영화 사진
 const SliderPosterDetailCover = styled.div`
     width: 100%;
     height: 350px;
@@ -152,7 +154,6 @@ const SliderPosterDetailContainer = styled.div`
 const SliderPosterDetailTitle = styled.h2`
     color: ${(props) => props.theme.white.lighter};
     font-size: 28px;
-
     text-align: center;
 `;
 // SliderPoster 클릭 시 확대되는 상세 정보창에 들어갈 영화 줄거리
@@ -161,10 +162,11 @@ const SliderPosterDetailOverView = styled.p`
     text-align: center;
     color: ${(props) => props.theme.white.lighter};
 `;
+// SliderPoster 클릭 시 확대되는 상세 정보창에 들어갈 영화 포스터
 const SliderPosterDetailPoster = styled.img`
     margin-left: 15px;
 `;
-// SLider 안의 영화 포스터 애니메이션 설정
+// Slider 안의 영화 포스터 애니메이션 설정
 const sliderPosterVariants = {
     normal: { scale: 1 },
     hover: {
@@ -262,7 +264,9 @@ function Home() {
                     <SliderWrapper>
                         <Sliderheader>
                             <SliderTitle>Now Playing</SliderTitle>
-                            <SliderArrow onClick={increaseIndex} />
+                            <SliderArrow onClick={increaseIndex}>
+                                <IoIosArrowDropright />
+                            </SliderArrow>
                         </Sliderheader>
                         {/* 요소가 생기거나 사라질 때 효과 부여 */}
                         {/* onExitComplete : 애니메이션이 완전히 끝날 때 실행 */}

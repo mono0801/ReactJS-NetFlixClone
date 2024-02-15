@@ -9,14 +9,13 @@ function App() {
     const client = new QueryClient();
     return (
         <QueryClientProvider client={client}>
-            <BrowserRouter basename="/">
+            <BrowserRouter basename={process.env.PUBLIC_URL}>
                 <Header />
                 <Routes>
                     <Route path="/tv" element={<Tv />} />
                     <Route path="/tv/:tvId" element={<Tv />} />
                     <Route path="/search" element={<Search />} />
                     <Route path="/" element={<Home />} />
-                    <Route path="/Reactjs-netflixclone" element={<Home />} />
                     <Route path="/movies/:movieId" element={<Home />} />
                 </Routes>
             </BrowserRouter>

@@ -10,7 +10,8 @@ npm react-beautiful-dnd -> (Drag & Drop)\
 npm i --save-dev @types/react-beautiful-dnd\
 npm install framer-motion@10.12.4\
 npm i react-router-dom\
-npm i react-detect-click-outside -> (외부 영역 클릭 인식)
+npm i react-detect-click-outside -> (외부 영역 클릭 인식)\
+npm install react-icons --save -> (리액트에서 제공하는 아이콘)\
 
 # Getting Started with Create React App
 

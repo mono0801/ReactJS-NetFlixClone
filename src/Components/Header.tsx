@@ -132,9 +132,9 @@ interface IForm {
 function Header() {
     // 현재 우리가 어느 route에 있는지 반환한다
     const homeMatch = useMatch("/");
-    const mainMatch = useMatch("Reactjs-netflixclone");
     const tvMatch = useMatch("tv");
     const movieMatch = useMatch("/movies/:movieId");
+    const tvdetailMatch = useMatch("/tv/:tvId");
     // 검색창이 활성화 되었는지 판단
     const [searchOpen, setSearchOpen] = useState(false);
     const toggleSearch = () => {
@@ -195,7 +195,7 @@ function Header() {
                     <Item onHoverStart={toggleItem1} onHoverEnd={toggleItem1}>
                         <Link to={"/"}>
                             Home
-                            {(homeMatch || movieMatch || mainMatch) && (
+                            {(homeMatch || movieMatch) && (
                                 <CurrentRedDot layoutId="current" />
                             )}
                             <HighLight
@@ -211,7 +211,9 @@ function Header() {
                     <Item onHoverStart={toggleItem2} onHoverEnd={toggleItem2}>
                         <Link to={"tv"}>
                             TV Show
-                            {tvMatch && <CurrentRedDot layoutId="current" />}
+                            {(tvMatch || tvdetailMatch) && (
+                                <CurrentRedDot layoutId="current" />
+                            )}
                             <HighLight
                                 initial={{
                                     scaleX: 0,
