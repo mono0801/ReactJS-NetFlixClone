@@ -1,7 +1,13 @@
 // 검색 화면
+// modal 구현하기
 import { useForm } from "react-hook-form";
 import { useQuery } from "react-query";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import {
+    PathMatch,
+    useMatch,
+    useNavigate,
+    useSearchParams,
+} from "react-router-dom";
 import styled from "styled-components";
 import {
     getSearchMovies,
@@ -11,7 +17,7 @@ import {
 } from "../api";
 import { SlMagnifier } from "react-icons/sl";
 import { makeImagePath } from "../utils";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 
 const Wrapper = styled.div`
     padding: 60px;
@@ -106,6 +112,71 @@ const PosterInfo = styled(motion.div)`
         font-size: 18px;
     }
 `;
+// Poster 클릭 시 확대되는 상세 정보창을 끄기 위한 배경 오버레이
+const Overlay = styled(motion.div)`
+    position: fixed;
+    top: 0;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+`;
+// Poster 클릭 시 확대되는 상세 정보창
+const PosterDetail = styled(motion.div)`
+    width: 40vw;
+    height: 70vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    background-color: ${(props) => props.theme.black.lighter};
+    border-radius: 20px;
+    overflow: auto;
+
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    &::-webkit-scrollbar {
+        display: none;
+    }
+`;
+// Poster 클릭 시 확대되는 상세 정보창 상단에 들어갈 영화 사진
+const PosterDetailCover = styled.div`
+    width: 100%;
+    height: 350px;
+    background-size: cover;
+    background-position: center center;
+`;
+// 상세 정보창에 들어갈 정보를 감싸는 container (포스터 + 영화 제목 + 줄거리)
+const PosterDetailWrapper = styled.div`
+    position: relative;
+    top: -50px;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+`;
+// 상세 정보창에 들어갈 정보를 감싸는 wrapper (영화 제목 + 줄거리)
+const PosterDetailContainer = styled.div`
+    display: grid;
+    grid-template-rows: 0.5fr auto;
+`;
+// Poster 클릭 시 확대되는 상세 정보창에 들어갈 영화 포스터
+const PosterDetailPoster = styled.img`
+    margin-left: 15px;
+`;
+// Poster 클릭 시 확대되는 상세 정보창에 들어갈 영화 제목
+const PosterDetailTitle = styled.h2`
+    color: ${(props) => props.theme.white.lighter};
+    font-size: 28px;
+    text-align: center;
+`;
+// Poster 클릭 시 확대되는 상세 정보창에 들어갈 영화 줄거리
+const PosterDetailOverView = styled.p`
+    padding: 20px;
+    text-align: center;
+    color: ${(props) => props.theme.white.lighter};
+`;
 // 검색된 영화 포스터 애니메이션 설정
 const PosterVariants = {
     normal: { scale: 1 },
@@ -159,6 +230,39 @@ function Search() {
         useQuery<IGetTvResult>(["tves", "nowPlaying"], () =>
             getSearchTves(String(keyword))
         );
+    // 포스터 클릭 시 해당 영화의 ID를 포함하는 url로 이동하는 함수
+    const onMoviePosterClicked = (movieId: number) => {
+        navigate(`/search/movie/${movieId}?keyword=${keyword}`);
+    };
+    // 포스터 클릭 시 해당 영화의 ID를 포함하는 url로 이동하는 함수
+    const onTvPosterClicked = (movieId: number) => {
+        navigate(`/search/tv/${movieId}?keyword=${keyword}`);
+    };
+    // 현재 우리가 어느 route에 있는지 확인한다
+    const detailMovieMatch: PathMatch<string> | null = useMatch(
+        "search/movie/:searchId"
+    );
+    const detailTvMatch: PathMatch<string> | null = useMatch(
+        "search/tv/:searchId"
+    );
+    // 영화 상세보기 밖의 오버레이 클릭 시 상세보기 창 닫기
+    const onOverlayClicked = () => {
+        navigate(`/search?keyword=${keyword}`);
+    };
+    // slider에서 클릭한 영화의 Id 가져오기
+    const clickedMovieId =
+        detailMovieMatch?.params.searchId &&
+        movieSearch?.results.find(
+            // 문자열 앞에 +를 붙이면 숫자열이 된다 => +"string"
+            (movie) => String(movie.id) === detailMovieMatch.params.searchId
+        );
+    // slider에서 클릭한 tv의 Id 가져오기
+    const clickedTvId =
+        detailTvMatch?.params.searchId &&
+        tvSearch?.results.find(
+            // 문자열 앞에 +를 붙이면 숫자열이 된다 => +"string"
+            (movie) => String(movie.id) === detailTvMatch.params.searchId
+        );
 
     return (
         <Wrapper>
@@ -188,10 +292,12 @@ function Search() {
                         {movieSearch?.results.map((movie) => (
                             <Poster
                                 key={movie.id}
+                                layoutId={movie.id + ""}
                                 variants={PosterVariants}
                                 initial="normal"
                                 whileHover={"hover"}
                                 transition={{ type: "tween" }}
+                                onClick={() => onMoviePosterClicked(movie.id)}
                                 bgPhoto={makeImagePath(
                                     movie.backdrop_path || movie.poster_path,
                                     "w500"
@@ -208,10 +314,14 @@ function Search() {
                         {tvSearch?.results.map((movie) => (
                             <Poster
                                 key={movie.id}
+                                layoutId={"tv" + movie.id + ""}
                                 variants={PosterVariants}
                                 initial="normal"
                                 whileHover={"hover"}
                                 transition={{ type: "tween" }}
+                                // onClick의 onSliderPosterClicked 함수에 movie.id 인자를 넘겨줘야 하므로 익명함수를 사용한다
+                                // 익명함수가 아닐 경우 인자를 넘겨주기 전에 함수가 실행된다
+                                onClick={() => onTvPosterClicked(movie.id)}
                                 bgPhoto={makeImagePath(
                                     movie.backdrop_path || movie.poster_path,
                                     "w500"
@@ -223,6 +333,95 @@ function Search() {
                             </Poster>
                         ))}
                     </PosterContainer>
+                    <AnimatePresence>
+                        {detailMovieMatch ? (
+                            <>
+                                <Overlay
+                                    onClick={onOverlayClicked}
+                                    animate={{ opacity: 1 }}
+                                    exit={{ opacity: 0 }}
+                                />
+                                <PosterDetail
+                                    layoutId={detailMovieMatch.params.searchId}
+                                >
+                                    {clickedMovieId && (
+                                        <>
+                                            <PosterDetailCover
+                                                style={{
+                                                    backgroundImage: `linear-gradient(to top, black, transparent), url(${makeImagePath(
+                                                        clickedMovieId.backdrop_path,
+                                                        "w500"
+                                                    )})`,
+                                                }}
+                                            />
+                                            <PosterDetailWrapper>
+                                                <PosterDetailPoster
+                                                    src={makeImagePath(
+                                                        clickedMovieId.poster_path,
+                                                        "w200"
+                                                    )}
+                                                />
+                                                <PosterDetailContainer>
+                                                    <PosterDetailTitle>
+                                                        {clickedMovieId.title}
+                                                    </PosterDetailTitle>
+                                                    <PosterDetailOverView>
+                                                        {clickedMovieId.overview ||
+                                                            "줄거리가 존재하지 않습니다"}
+                                                    </PosterDetailOverView>
+                                                </PosterDetailContainer>
+                                            </PosterDetailWrapper>
+                                        </>
+                                    )}
+                                </PosterDetail>
+                            </>
+                        ) : null}
+
+                        {detailTvMatch ? (
+                            <>
+                                <Overlay
+                                    onClick={onOverlayClicked}
+                                    animate={{ opacity: 1 }}
+                                    exit={{ opacity: 0 }}
+                                />
+                                <PosterDetail
+                                    layoutId={
+                                        "tv" + detailTvMatch.params.searchId
+                                    }
+                                >
+                                    {clickedTvId && (
+                                        <>
+                                            <PosterDetailCover
+                                                style={{
+                                                    backgroundImage: `linear-gradient(to top, black, transparent), url(${makeImagePath(
+                                                        clickedTvId.backdrop_path,
+                                                        "w500"
+                                                    )})`,
+                                                }}
+                                            />
+                                            <PosterDetailWrapper>
+                                                <PosterDetailPoster
+                                                    src={makeImagePath(
+                                                        clickedTvId.poster_path,
+                                                        "w200"
+                                                    )}
+                                                />
+                                                <PosterDetailContainer>
+                                                    <PosterDetailTitle>
+                                                        {clickedTvId.name}
+                                                    </PosterDetailTitle>
+                                                    <PosterDetailOverView>
+                                                        {clickedTvId.overview ||
+                                                            "줄거리가 존재하지 않습니다"}
+                                                    </PosterDetailOverView>
+                                                </PosterDetailContainer>
+                                            </PosterDetailWrapper>
+                                        </>
+                                    )}
+                                </PosterDetail>
+                            </>
+                        ) : null}
+                    </AnimatePresence>
                 </>
             )}
         </Wrapper>
