@@ -196,6 +196,7 @@ function Search() {
                     <AnimatePresence>
                         {detailMovieMatch && clickedMovieId ? (
                             <Modal
+                                category="search"
                                 keyword={keyword}
                                 detailMatch={detailMovieMatch}
                                 backdrop_path={clickedMovieId.backdrop_path}
@@ -206,6 +207,7 @@ function Search() {
                         ) : null}
                         {detailTvMatch && clickedTvId ? (
                             <Modal
+                                category="search"
                                 keyword={keyword}
                                 detailMatch={detailTvMatch}
                                 backdrop_path={clickedTvId.backdrop_path}

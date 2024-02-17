@@ -81,6 +81,7 @@ const DetailOverView = styled.p`
  * @returns 상세 정보창 Div
  */
 function Modal({
+    category,
     keyword,
     detailMatch,
     backdrop_path,
@@ -88,6 +89,7 @@ function Modal({
     title,
     overview,
 }: {
+    category: "movie" | "tv" | "search";
     keyword: string | null;
     detailMatch: PathMatch<string>;
     backdrop_path: string;
@@ -99,8 +101,23 @@ function Modal({
     const navigate = useNavigate();
     // 영화 상세보기 밖의 오버레이 클릭 시 상세보기 창 닫기
     const onOverlayClicked = () => {
-        navigate(`/search?keyword=${keyword}`);
+        if (category == "tv") {
+            navigate(`/tv`);
+        } else if (category == "search") {
+            navigate(`/search?keyword=${keyword}`);
+        } else {
+            navigate(`/`);
+        }
     };
+    function layoutId() {
+        if (category == "tv") {
+            return String(detailMatch.params.tvId);
+        } else if (category == "search") {
+            return String(detailMatch.params.searchId);
+        } else {
+            return String(detailMatch.params.movieId);
+        }
+    }
 
     return (
         <>
@@ -109,7 +126,7 @@ function Modal({
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
             />
-            <Detail layoutId={detailMatch.params.searchId}>
+            <Detail layoutId={layoutId()}>
                 <DetailCover
                     style={{
                         backgroundImage: `linear-gradient(to top, black, transparent), url(${makeImagePath(

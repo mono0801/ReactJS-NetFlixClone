@@ -2,11 +2,14 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
 import { useQuery } from "react-query";
-import { PathMatch, useMatch, useNavigate } from "react-router-dom";
+import { PathMatch, useMatch } from "react-router-dom";
 import styled from "styled-components";
 import { getMovies, IGetMoviesResult } from "../api";
-import { makeImagePath, useWindowDimensions } from "../utils";
+import { useWindowDimensions } from "../utils";
 import { IoIosArrowDropright } from "react-icons/io";
+import Card from "../Components/Card";
+import Modal from "../Components/Modal";
+import Banner from "../Components/Banner";
 
 const Wrapper = styled.div`
     background: black;
@@ -19,28 +22,6 @@ const Loader = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-`;
-// 홈 화면의 메인 배너
-const Banner = styled.div<{ bgPhoto: string }>`
-    height: 100vh;
-    padding: 60px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    // 배경 이미지에 그라데이션과 영화 포스터 두 개를 동시에 적용
-    background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 1)),
-        url(${(props) => props.bgPhoto});
-    background-size: cover;
-`;
-// 배너에 들어갈 영화 제목
-const Title = styled.h2`
-    margin-bottom: 20px;
-    font-size: 48px;
-`;
-// 배너에 들어갈 영화 줄거리
-const OverView = styled.p`
-    width: 50%;
-    font-size: 20px;
 `;
 // 배너 하단에 들어갈 영화 포스터 슬라이드
 const SliderWrapper = styled.div`
@@ -76,121 +57,16 @@ const Slider = styled(motion.div)`
     grid-template-columns: repeat(6, 1fr);
     gap: 5px;
     position: absolute;
-`;
-// Slider 안에 들어갈 영화 포스터 div
-const SliderPoster = styled(motion.div)<{ bgPhoto: string }>`
-    height: 200px;
-    background-color: white;
-    background-image: url(${(props) => props.bgPhoto});
-    background-size: cover;
-    background-position: center center;
-    overflow: hidden;
-    cursor: pointer;
+
     // 첫번째 슬라이더의 포스터는 오른쪽으로 커지게
-    &:first-child {
+    div:first-child {
         transform-origin: center left;
     }
     // 마지막 슬라이더의 포스터는 왼쪽으로 커지게
-    &:last-child {
+    div:last-child {
         transform-origin: center right;
     }
 `;
-// Slider 안의 영화 정보
-const SliderPosterInfo = styled(motion.div)`
-    width: 100%;
-    padding: 10px;
-    position: absolute;
-    bottom: 0;
-    background-color: ${(props) => props.theme.black.darker};
-    opacity: 0;
-    h4 {
-        text-align: center;
-        font-size: 18px;
-    }
-`;
-// SliderPoster 클릭 시 확대되는 상세 정보창을 끄기 위한 배경 오버레이
-const Overlay = styled(motion.div)`
-    position: fixed;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    opacity: 0;
-`;
-// SliderPoster 클릭 시 확대되는 상세 정보창
-const SliderPosterDetail = styled(motion.div)`
-    width: 40vw;
-    height: 70vh;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    margin: auto;
-    background-color: ${(props) => props.theme.black.lighter};
-    border-radius: 20px;
-    overflow: hidden;
-`;
-// SliderPoster 클릭 시 확대되는 상세 정보창 상단에 들어갈 영화 사진
-const SliderPosterDetailCover = styled.div`
-    width: 100%;
-    height: 350px;
-    background-size: cover;
-    background-position: center center;
-`;
-// 상세 정보창에 들어갈 정보를 감싸는 container (포스터 + 영화 제목 + 줄거리)
-const SliderPosterDetailWrapper = styled.div`
-    position: relative;
-    top: -50px;
-    display: grid;
-    grid-template-columns: 1fr 2fr;
-`;
-// 상세 정보창에 들어갈 정보를 감싸는 wrapper (영화 제목 + 줄거리)
-const SliderPosterDetailContainer = styled.div`
-    display: grid;
-    grid-template-rows: 0.5fr auto;
-`;
-// SliderPoster 클릭 시 확대되는 상세 정보창에 들어갈 영화 제목
-const SliderPosterDetailTitle = styled.h2`
-    color: ${(props) => props.theme.white.lighter};
-    font-size: 28px;
-    text-align: center;
-`;
-// SliderPoster 클릭 시 확대되는 상세 정보창에 들어갈 영화 줄거리
-const SliderPosterDetailOverView = styled.p`
-    padding: 20px;
-    text-align: center;
-    color: ${(props) => props.theme.white.lighter};
-`;
-// SliderPoster 클릭 시 확대되는 상세 정보창에 들어갈 영화 포스터
-const SliderPosterDetailPoster = styled.img`
-    margin-left: 15px;
-`;
-// Slider 안의 영화 포스터 애니메이션 설정
-const sliderPosterVariants = {
-    normal: { scale: 1 },
-    hover: {
-        scale: 1.3,
-        y: -50,
-        borderRadius: "20px",
-        transition: {
-            delay: 0.35,
-            duration: 0.2,
-            type: "tween",
-        },
-    },
-};
-// Slider 안의 영화 정보 애니메이션 설정
-const SliderPosterInfoVariants = {
-    hover: {
-        opacity: 0.8,
-        transition: {
-            delay: 0.35,
-            duration: 0.2,
-            type: "tween",
-        },
-    },
-};
 // 슬라이드에서 한 번에 보여줄 영화 갯수
 const offset = 6;
 
@@ -221,21 +97,9 @@ function Home() {
     const toggleLeaving = () => setLeaving((prev) => !prev);
     // 현재 윈도우 사이트의 너비 반환하는 함수
     const width = useWindowDimensions();
-    // 해당 url을 통해 필요한 부분만 재랜더링
-    // <useNavigate>의 경우, 이동 후 추가적인 동작이 필요할 때에 사용한다.
-    // <Link>의 경우, 클릭 시 바로 이동하게 하기 위한 심플한 동작을 위해 주로 사용
-    const navigate = useNavigate();
-    // slider 클릭 시 해당 영화의 ID 반환하는 함수
-    const onSliderPosterClicked = (movieId: number) => {
-        navigate(`/movies/${movieId}`);
-    };
     // 현재 우리가 어느 route에 있는지 확인한다
     const detailMovieMatch: PathMatch<string> | null =
         useMatch("/movies/:movieId");
-    // 영화 상세보기 밖의 오버레이 클릭 시 상세보기 창 닫기
-    const onOverlayClicked = () => {
-        navigate(`/`);
-    };
     // slider에서 클릭한 영화의 Id 가져오기
     const clickedMovieId =
         detailMovieMatch?.params.movieId &&
@@ -252,15 +116,10 @@ function Home() {
             ) : (
                 <>
                     <Banner
-                        // 영화 포스터 전달
-                        bgPhoto={makeImagePath(
-                            data?.results[0].backdrop_path || ""
-                        )}
-                    >
-                        {/* API로 가져온 리스트 중 첫번째 영화 */}
-                        <Title>{data?.results[0].title}</Title>
-                        <OverView>{data?.results[0].overview}</OverView>
-                    </Banner>
+                        backdrop_path={data?.results[0].backdrop_path}
+                        title={data?.results[0].title}
+                        overview={data?.results[0].overview}
+                    />
                     <SliderWrapper>
                         <Sliderheader>
                             <SliderTitle>Now Playing</SliderTitle>
@@ -290,79 +149,30 @@ function Home() {
                                         offset * index + offset
                                     )
                                     .map((movie) => (
-                                        <SliderPoster
+                                        <Card
                                             key={movie.id}
-                                            layoutId={movie.id + ""}
-                                            variants={sliderPosterVariants}
-                                            initial="normal"
-                                            whileHover={"hover"}
-                                            transition={{ type: "tween" }}
-                                            // onClick의 onSliderPosterClicked 함수에 movie.id 인자를 넘겨줘야 하므로 익명함수를 사용한다
-                                            // 익명함수가 아닐 경우 인자를 넘겨주기 전에 함수가 실행된다
-                                            onClick={() =>
-                                                onSliderPosterClicked(movie.id)
-                                            }
-                                            bgPhoto={makeImagePath(
-                                                movie.backdrop_path ||
-                                                    movie.poster_path,
-                                                "w500"
-                                            )}
-                                        >
-                                            {/* 부모의 variants가 자동으로 상속된다 */}
-                                            <SliderPosterInfo
-                                                variants={
-                                                    SliderPosterInfoVariants
-                                                }
-                                            >
-                                                <h4>{movie.title}</h4>
-                                            </SliderPosterInfo>
-                                        </SliderPoster>
+                                            category={"movie"}
+                                            keyword={null}
+                                            id={movie.id}
+                                            backdrop_path={movie.backdrop_path}
+                                            poster_path={movie.poster_path}
+                                            title={movie.title}
+                                        />
                                     ))}
                             </Slider>
                         </AnimatePresence>
                     </SliderWrapper>
                     <AnimatePresence>
-                        {detailMovieMatch ? (
-                            <>
-                                <Overlay
-                                    onClick={onOverlayClicked}
-                                    animate={{ opacity: 1 }}
-                                    exit={{ opacity: 0 }}
-                                />
-                                <SliderPosterDetail
-                                    layoutId={detailMovieMatch.params.movieId}
-                                >
-                                    {clickedMovieId && (
-                                        <>
-                                            <SliderPosterDetailCover
-                                                style={{
-                                                    backgroundImage: `linear-gradient(to top, black, transparent), url(${makeImagePath(
-                                                        clickedMovieId.backdrop_path,
-                                                        "w500"
-                                                    )})`,
-                                                }}
-                                            />
-                                            <SliderPosterDetailWrapper>
-                                                <SliderPosterDetailPoster
-                                                    src={makeImagePath(
-                                                        clickedMovieId.poster_path,
-                                                        "w200"
-                                                    )}
-                                                />
-                                                <SliderPosterDetailContainer>
-                                                    <SliderPosterDetailTitle>
-                                                        {clickedMovieId.title}
-                                                    </SliderPosterDetailTitle>
-                                                    <SliderPosterDetailOverView>
-                                                        {clickedMovieId.overview ||
-                                                            "줄거리가 존재하지 않습니다"}
-                                                    </SliderPosterDetailOverView>
-                                                </SliderPosterDetailContainer>
-                                            </SliderPosterDetailWrapper>
-                                        </>
-                                    )}
-                                </SliderPosterDetail>
-                            </>
+                        {detailMovieMatch && clickedMovieId ? (
+                            <Modal
+                                category="movie"
+                                keyword={null}
+                                detailMatch={detailMovieMatch}
+                                backdrop_path={clickedMovieId.backdrop_path}
+                                poster_path={clickedMovieId.poster_path}
+                                title={clickedMovieId.title}
+                                overview={clickedMovieId.overview}
+                            />
                         ) : null}
                     </AnimatePresence>
                 </>

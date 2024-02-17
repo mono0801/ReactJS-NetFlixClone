@@ -13,6 +13,14 @@ const Poster = styled(motion.div)<{ bgPhoto: string }>`
     background-position: center center;
     overflow: hidden;
     cursor: pointer;
+    // 첫번째 슬라이더의 포스터는 오른쪽으로 커지게
+    &:first-child {
+        transform-origin: center left;
+    }
+    // 마지막 슬라이더의 포스터는 왼쪽으로 커지게
+    &:last-child {
+        transform-origin: center right;
+    }
 `;
 // 검색된 영화 제목
 const PosterInfo = styled(motion.div)`
@@ -84,92 +92,42 @@ function Card({
     // 특정 라우터로 보내기
     const navigate = useNavigate();
     // 포스터 클릭 시 해당 영화의 ID를 포함하는 url로 이동하는 함수
-    const onMovieCardClicked = (Id: number) => {
-        navigate(`/search/movie/${Id}?keyword=${keyword}`);
-    };
-    // 포스터 클릭 시 해당 tv 영상의 ID를 포함하는 url로 이동하는 함수
-    const onTvCardClicked = (Id: number) => {
-        navigate(`/search/tv/${Id}?keyword=${keyword}`);
+    const onCardClicked = (Id: number) => {
+        if (category == "search") {
+            // search의 TV Show 리스트 카드 클릭 시
+            if (searchCategory == "tv") {
+                navigate(`/search/tv/${Id}?keyword=${keyword}`);
+            }
+            // search의 Movie 리스트 카드 클릭 시
+            else {
+                navigate(`/search/movie/${Id}?keyword=${keyword}`);
+            }
+        }
+        // TV Show 리스트 카드 클릭 시
+        else if (category == "tv") {
+            navigate(`/tv/${Id}`);
+        }
+        // Home 리스트 카드 클릭 시
+        else {
+            navigate(`/movies/${Id}`);
+        }
     };
 
-    if (category == "search") {
-        // Search에서 Movie 리스트의 Card를 클릭 했을 경우
-        if (searchCategory == "movie") {
-            return (
-                <Poster
-                    layoutId={id + ""}
-                    variants={PosterVariants}
-                    initial="normal"
-                    whileHover={"hover"}
-                    transition={{ type: "tween" }}
-                    bgPhoto={makeImagePath(
-                        backdrop_path || poster_path,
-                        "w500"
-                    )}
-                    onClick={() => onMovieCardClicked(id)}
-                >
-                    <PosterInfo variants={PosterInfoVariants}>
-                        <h4>{title}</h4>
-                    </PosterInfo>
-                </Poster>
-            );
-        }
-        // Search에서 TV Show 리스트의 Card를 클릭 했을 경우
-        else if (searchCategory == "tv") {
-            return (
-                <Poster
-                    layoutId={id + ""}
-                    variants={PosterVariants}
-                    initial="normal"
-                    whileHover={"hover"}
-                    transition={{ type: "tween" }}
-                    bgPhoto={makeImagePath(
-                        backdrop_path || poster_path,
-                        "w500"
-                    )}
-                    onClick={() => onTvCardClicked(id)}
-                >
-                    <PosterInfo variants={PosterInfoVariants}>
-                        <h4>{title}</h4>
-                    </PosterInfo>
-                </Poster>
-            );
-        } else {
-            return null;
-        }
-    } else if (category == "tv") {
-        return (
-            <Poster
-                layoutId={id + ""}
-                variants={PosterVariants}
-                initial="normal"
-                whileHover={"hover"}
-                transition={{ type: "tween" }}
-                bgPhoto={makeImagePath(backdrop_path || poster_path, "w500")}
-                // onClick={() => onTvCardClicked(id)}
-            >
-                <PosterInfo variants={PosterInfoVariants}>
-                    <h4>{title}</h4>
-                </PosterInfo>
-            </Poster>
-        );
-    } else {
-        return (
-            <Poster
-                layoutId={id + ""}
-                variants={PosterVariants}
-                initial="normal"
-                whileHover={"hover"}
-                transition={{ type: "tween" }}
-                bgPhoto={makeImagePath(backdrop_path || poster_path, "w500")}
-                // onClick={() => onTvCardClicked(id)}
-            >
-                <PosterInfo variants={PosterInfoVariants}>
-                    <h4>{title}</h4>
-                </PosterInfo>
-            </Poster>
-        );
-    }
+    return (
+        <Poster
+            layoutId={id + ""}
+            variants={PosterVariants}
+            initial="normal"
+            whileHover={"hover"}
+            transition={{ type: "tween" }}
+            bgPhoto={makeImagePath(backdrop_path || poster_path, "w500")}
+            onClick={() => onCardClicked(id)}
+        >
+            <PosterInfo variants={PosterInfoVariants}>
+                <h4>{title}</h4>
+            </PosterInfo>
+        </Poster>
+    );
 }
 
 export default Card;
