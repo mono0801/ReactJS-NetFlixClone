@@ -70,6 +70,13 @@ a {
   text-decoration:none;
   color:inherit;
 }
+html {
+  -ms-overflow-style: none;
+    scrollbar-width: none;
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}
 `;
 
 const client = new QueryClient();

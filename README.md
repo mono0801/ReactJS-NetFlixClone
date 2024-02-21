@@ -12,6 +12,7 @@ npm install framer-motion@10.12.4\
 npm i react-router-dom\
 npm i react-detect-click-outside -> (외부 영역 클릭 인식)\
 npm install react-icons --save -> (리액트에서 제공하는 아이콘)\
+npm i swiper -> (캐러셀 슬라이드)\
 
 # Getting Started with Create React App
 

@@ -17,18 +17,14 @@ import {
 } from "../api";
 import { SlMagnifier } from "react-icons/sl";
 import { AnimatePresence } from "framer-motion";
-import Modal from "../Components/Modal";
-import Card from "../Components/Card";
+import Card from "../Components/List/Card";
+import Loading from "../Components/Loading";
+import MovieDetail from "../Components/Detail/MovieDetail";
+import TvDetail from "../Components/Detail/TvDetail";
+import { useEffect } from "react";
 
 const Wrapper = styled.div`
     padding: 60px;
-`;
-// API 로딩 중일 때 표시
-const Loader = styled.div`
-    height: 20vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
 `;
 // 검색 화면 상단에 위치할 검색 바
 const SearchBar = styled.div`
@@ -75,12 +71,13 @@ const ListTitle = styled.h1`
     margin-bottom: 10px;
 `;
 // 검색된 리스트를 감싸는 container
-const PosterContainer = styled.div`
+const CardContainer = styled.div`
     width: 100%;
     height: auto;
+    min-height: 28vh;
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    grid-gap: 10px;
+    grid-template-columns: repeat(7, 200px);
+    grid-gap: 40px;
     // 마지막 슬라이더의 포스터는 왼쪽으로 커지게
     div:last-child {
         transform-origin: center right;
@@ -101,45 +98,38 @@ function Search() {
     // url의 파라미터 값을 저장하기
     const keyword = searchParams.get(`keyword`);
     // Input에서 입력한 값을 가져오기
-    const { register, handleSubmit } = useForm<IForm>();
+    const { register, handleSubmit, setValue } = useForm<IForm>();
     // 특정 라우터로 보내기
     const navigate = useNavigate();
     // Input에서 가져온 값이 유효한지 검사
     const onValid = (data: IForm) => {
+        setValue("keyword", "");
         navigate(`/search?keyword=${data.keyword}`);
     };
     // themoviedb.org로 부터 검색해서 가져온 영화 정보
-    const { data: movieSearch, isLoading: movieSearchLoading } =
-        useQuery<IGetMoviesResult>(["movies", "nowPlaying"], () =>
-            getSearchMovies(String(keyword))
-        );
+    const {
+        data: movieSearch,
+        isLoading: movieSearchLoading,
+        refetch: movieRefetch,
+    } = useQuery<IGetMoviesResult>(["movies", "nowPlaying"], () =>
+        getSearchMovies(String(keyword))
+    );
     // themoviedb.org로 부터 검색해서 가져온 TV Show 정보
-    const { data: tvSearch, isLoading: tvSearchLoading } =
-        useQuery<IGetTvResult>(["tves", "nowPlaying"], () =>
-            getSearchTves(String(keyword))
-        );
+    const {
+        data: tvSearch,
+        isLoading: tvSearchLoading,
+        refetch: tvRefetch,
+    } = useQuery<IGetTvResult>(["tves", "nowPlaying"], () =>
+        getSearchTves(String(keyword))
+    );
     // 현재 우리가 어느 route에 있는지 확인한다
-    const detailMovieMatch: PathMatch<string> | null = useMatch(
-        "search/movie/:searchId"
-    );
-    const detailTvMatch: PathMatch<string> | null = useMatch(
-        "search/tv/:searchId"
-    );
-    // Card에서 클릭한 영화의 Id 가져오기
-    const clickedMovieId =
-        detailMovieMatch?.params.searchId &&
-        movieSearch?.results.find(
-            // 문자열 앞에 +를 붙이면 숫자열이 된다 => +"string"
-            (movie) => String(movie.id) === detailMovieMatch.params.searchId
-        );
-    // Card에서 클릭한 tv의 Id 가져오기
-    const clickedTvId =
-        detailTvMatch?.params.searchId &&
-        tvSearch?.results.find(
-            // 문자열 앞에 +를 붙이면 숫자열이 된다 => +"string"
-            (movie) => String(movie.id) === detailTvMatch.params.searchId
-        );
-
+    const detailMovieMatch: PathMatch<string> | null =
+        useMatch("search/movie/:Id");
+    const detailTvMatch: PathMatch<string> | null = useMatch("search/tv/:Id");
+    useEffect(() => {
+        movieRefetch();
+        tvRefetch();
+    }, [keyword, movieRefetch, tvRefetch]);
     return (
         <Wrapper>
             <SearchBar>
@@ -156,7 +146,7 @@ function Search() {
             </SearchBar>
 
             {movieSearchLoading && tvSearchLoading ? (
-                <Loader>Loading...</Loader>
+                <Loading />
             ) : (
                 <>
                     <SearchTitle>
@@ -164,7 +154,7 @@ function Search() {
                     </SearchTitle>
                     <hr />
                     <ListTitle>🎬 Movie</ListTitle>
-                    <PosterContainer>
+                    <CardContainer>
                         {movieSearch?.results.map((movie) => (
                             <Card
                                 key={movie.id}
@@ -177,43 +167,33 @@ function Search() {
                                 title={movie.title}
                             />
                         ))}
-                    </PosterContainer>
+                    </CardContainer>
                     <ListTitle>📺 TV Show</ListTitle>
-                    <PosterContainer>
-                        {tvSearch?.results.map((movie) => (
+                    <CardContainer>
+                        {tvSearch?.results.map((tv) => (
                             <Card
-                                key={movie.id}
+                                key={tv.id}
                                 category={"search"}
                                 searchCategory={"tv"}
                                 keyword={keyword}
-                                id={movie.id}
-                                backdrop_path={movie.backdrop_path}
-                                poster_path={movie.poster_path}
-                                title={movie.name}
+                                id={tv.id}
+                                backdrop_path={tv.backdrop_path}
+                                poster_path={tv.poster_path}
+                                title={tv.name}
                             />
                         ))}
-                    </PosterContainer>
+                    </CardContainer>
                     <AnimatePresence>
-                        {detailMovieMatch && clickedMovieId ? (
-                            <Modal
-                                category="search"
-                                keyword={keyword}
-                                detailMatch={detailMovieMatch}
-                                backdrop_path={clickedMovieId.backdrop_path}
-                                poster_path={clickedMovieId.poster_path}
-                                title={clickedMovieId.title}
-                                overview={clickedMovieId.overview}
+                        {detailMovieMatch ? (
+                            <MovieDetail
+                                keyword={String(keyword)}
+                                videoId={String(detailMovieMatch.params.Id)}
                             />
                         ) : null}
-                        {detailTvMatch && clickedTvId ? (
-                            <Modal
-                                category="search"
-                                keyword={keyword}
-                                detailMatch={detailTvMatch}
-                                backdrop_path={clickedTvId.backdrop_path}
-                                poster_path={clickedTvId.poster_path}
-                                title={clickedTvId.name}
-                                overview={clickedTvId.overview}
+                        {detailTvMatch ? (
+                            <TvDetail
+                                keyword={String(keyword)}
+                                videoId={String(detailTvMatch.params.Id)}
                             />
                         ) : null}
                     </AnimatePresence>

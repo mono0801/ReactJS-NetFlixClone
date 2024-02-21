@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form";
 
 // 상단 헤더에 위치할 네비게이션 바
 const Nav = styled(motion.nav)`
+    z-index: 100;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -133,8 +134,8 @@ function Header() {
     // 현재 우리가 어느 route에 있는지 반환한다
     const homeMatch = useMatch("/");
     const tvMatch = useMatch("tv");
-    const movieMatch = useMatch("/movies/:movieId");
-    const tvdetailMatch = useMatch("/tv/:tvId");
+    const movieMatch = useMatch("/movies/*");
+    const tvdetailMatch = useMatch("/tv/*");
     // 검색창이 활성화 되었는지 판단
     const [searchOpen, setSearchOpen] = useState(false);
     const toggleSearch = () => {
@@ -167,11 +168,12 @@ function Header() {
         });
     }, [scrollY]);
     // Input에서 입력한 값을 가져오기
-    const { register, handleSubmit } = useForm<IForm>();
+    const { register, handleSubmit, setValue } = useForm<IForm>();
     // 특정 라우터로 보내기
     const navigate = useNavigate();
     // Input에서 가져온 값이 유효한지 검사
     const onValid = (data: IForm) => {
+        setValue("keyword", "");
         navigate(`/search?keyword=${data.keyword}`);
     };
 

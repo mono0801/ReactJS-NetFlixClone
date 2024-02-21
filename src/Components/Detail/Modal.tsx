@@ -1,8 +1,10 @@
 // 포스터 클릭 시 확대 되는 상세 정보창
 import { motion } from "framer-motion";
+import { useQuery } from "react-query";
 import { PathMatch, useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
-import { makeImagePath } from "../utils";
+import { getVideoDetail, IGetDetailMovieResult } from "../../api";
+import { makeImagePath } from "../../utils";
 
 // Poster 클릭 시 확대되는 상세 정보창을 끄기 위한 배경 오버레이
 const Overlay = styled(motion.div)`
@@ -16,7 +18,7 @@ const Overlay = styled(motion.div)`
 `;
 // Poster 클릭 시 확대되는 상세 정보창
 const Detail = styled(motion.div)`
-    width: 40vw;
+    width: 50vw;
     height: 70vh;
     position: fixed;
     top: 0;
@@ -92,9 +94,9 @@ function Modal({
     category: "movie" | "tv" | "search";
     keyword: string | null;
     detailMatch: PathMatch<string>;
-    backdrop_path: string;
-    poster_path: string;
-    title: string;
+    backdrop_path?: string;
+    poster_path?: string;
+    title?: string;
     overview?: string;
 }) {
     // 특정 라우터로 보내기
@@ -109,15 +111,6 @@ function Modal({
             navigate(`/`);
         }
     };
-    function layoutId() {
-        if (category == "tv") {
-            return String(detailMatch.params.tvId);
-        } else if (category == "search") {
-            return String(detailMatch.params.searchId);
-        } else {
-            return String(detailMatch.params.movieId);
-        }
-    }
 
     return (
         <>
@@ -126,17 +119,19 @@ function Modal({
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
             />
-            <Detail layoutId={layoutId()}>
+            <Detail layoutId={detailMatch.params.Id}>
                 <DetailCover
                     style={{
                         backgroundImage: `linear-gradient(to top, black, transparent), url(${makeImagePath(
-                            backdrop_path,
-                            "w500"
+                            String(backdrop_path),
+                            ""
                         )})`,
                     }}
                 />
                 <DetailWrapper>
-                    <DetailPoster src={makeImagePath(poster_path, "w200")} />
+                    <DetailPoster
+                        src={makeImagePath(String(poster_path), "w200")}
+                    />
                     <DetailContainer>
                         <DetailTitle>{title}</DetailTitle>
                         <DetailOverView>

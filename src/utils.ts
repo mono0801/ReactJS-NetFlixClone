@@ -1,5 +1,5 @@
 // 자주 사용할 함수 라이브러리
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 // 영화 포스터 가져오는 함수
 /**

@@ -2,12 +2,12 @@
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
-import { makeImagePath } from "../utils";
+import { makeImagePath } from "../../utils";
 
 // 검색된 영화
 const Poster = styled(motion.div)<{ bgPhoto: string }>`
-    height: 200px;
-    background-color: whitesmoke;
+    height: 300px;
+    background-color: ${(props) => props.theme.black.lighter};
     background-image: url(${(props) => props.bgPhoto});
     background-size: cover;
     background-position: center center;
@@ -76,6 +76,7 @@ function Card({
     category,
     searchCategory,
     keyword,
+    tagName,
     id,
     backdrop_path,
     poster_path,
@@ -84,6 +85,7 @@ function Card({
     category: "movie" | "tv" | "search";
     searchCategory?: "movie" | "tv";
     keyword: string | null;
+    tagName?: string;
     id: number;
     backdrop_path: string;
     poster_path: string;
@@ -105,22 +107,22 @@ function Card({
         }
         // TV Show 리스트 카드 클릭 시
         else if (category == "tv") {
-            navigate(`/tv/${Id}`);
+            navigate(`/tv/${tagName}/${Id}`);
         }
         // Home 리스트 카드 클릭 시
         else {
-            navigate(`/movies/${Id}`);
+            navigate(`/movies/${tagName}/${Id}`);
         }
     };
 
     return (
         <Poster
-            layoutId={id + ""}
+            layoutId={String(tagName) + id}
             variants={PosterVariants}
             initial="normal"
             whileHover={"hover"}
             transition={{ type: "tween" }}
-            bgPhoto={makeImagePath(backdrop_path || poster_path, "w500")}
+            bgPhoto={makeImagePath(poster_path || backdrop_path, "w200")}
             onClick={() => onCardClicked(id)}
         >
             <PosterInfo variants={PosterInfoVariants}>
