@@ -37,6 +37,7 @@ const Slider = styled(motion.div)<{ offset: number }>`
     margin-top: 15px;
     width: 1440px;
     display: grid;
+    place-items: center;
     grid-template-columns: repeat(${(props) => props.offset}, 200px);
     gap: 40px;
     position: absolute;

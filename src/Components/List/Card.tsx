@@ -6,6 +6,7 @@ import { makeImagePath } from "../../utils";
 
 // 검색된 영화
 const Poster = styled(motion.div)<{ bgPhoto: string }>`
+    width: 200px;
     height: 300px;
     background-color: ${(props) => props.theme.black.lighter};
     background-image: url(${(props) => props.bgPhoto});
@@ -49,7 +50,7 @@ const PosterVariants = {
         },
     },
 };
-// 검색된 영화 포스터 정보 애니메이션 설정
+// 검색된 영화 포스터 제목 애니메이션 설정
 const PosterInfoVariants = {
     hover: {
         opacity: 0.8,

@@ -46,6 +46,8 @@ function Tv() {
             ) : (
                 <>
                     <Banner
+                        category="tv"
+                        videoId={popular?.results[0].id}
                         backdrop_path={popular?.results[0].backdrop_path}
                         title={popular?.results[0].name}
                         overview={popular?.results[0].overview}

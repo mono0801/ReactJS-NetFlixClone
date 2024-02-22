@@ -166,7 +166,7 @@ function MovieDetail({
         ["movie", "detail"],
         () => getVideoDetail("movie", videoId)
     );
-    console.log("넓이 : ", window.innerWidth);
+
     return (
         <>
             <Overlay

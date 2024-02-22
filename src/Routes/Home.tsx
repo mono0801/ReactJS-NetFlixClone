@@ -38,14 +38,6 @@ function Home() {
     const detailMovieMatch: PathMatch<string> | null = useMatch(
         "/movies/:category/:Id"
     );
-    // // slider에서 클릭한 영화의 Id 가져오기
-    // const clickedMovieId =
-    //     detailMovieMatch?.params.Id &&
-    //     nowPlaying?.results.find(
-    //         // 문자열 앞에 +를 붙이면 숫자열이 된다 => +"string"
-    //         (movie) => String(movie.id) === detailMovieMatch.params.Id
-    //     );
-    // <></> : fragment -> 많은 요소를 공통된 부모 없이 연이어서 리턴할 때 사용
 
     return (
         <Wrapper>
@@ -54,6 +46,8 @@ function Home() {
             ) : (
                 <>
                     <Banner
+                        category="movie"
+                        videoId={nowPlaying?.results[0].id}
                         backdrop_path={nowPlaying?.results[0].backdrop_path}
                         title={nowPlaying?.results[0].title}
                         overview={nowPlaying?.results[0].overview}
