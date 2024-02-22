@@ -13,8 +13,10 @@ import Banner from "../Components/Banner";
 import Loading from "../Components/Loading";
 import TvDetail from "../Components/Detail/TvDetail";
 import Cards from "../Components/List/TvCards";
+import { useWindowDimensions } from "../utils";
 
 const Wrapper = styled.div`
+    min-width: 530px;
     height: 200vh;
     background: black;
     overflow-x: hidden;
@@ -42,7 +44,7 @@ function Tv() {
     // 현재 우리가 어느 route에 있는지 확인한다
     const detailTvMatch: PathMatch<string> | null =
         useMatch("/tv/:category/:Id");
-
+    const width = useWindowDimensions();
     // <></> : fragment -> 많은 요소를 공통된 부모 없이 연이어서 리턴할 때 사용
     return (
         <Wrapper>
@@ -55,6 +57,7 @@ function Tv() {
                         videoId={popular?.results[0].id}
                         backdrop_path={popular?.results[0].backdrop_path}
                         title={popular?.results[0].name}
+                        // title={width + ""}
                         overview={popular?.results[0].overview}
                     />
                     {popular && topRated && airingToday ? (
@@ -75,7 +78,7 @@ function Tv() {
                                         cardsName="Top Rated"
                                         tagName="TopRated"
                                         cut={0}
-                                        top="100px"
+                                        top="110px"
                                     />
                                 </CardsContainer>
                                 <CardsContainer>
@@ -84,7 +87,7 @@ function Tv() {
                                         cardsName="Airing Today"
                                         tagName="AiringToday"
                                         cut={0}
-                                        top="400px"
+                                        top="420px"
                                     />
                                 </CardsContainer>
                             </CardsWrapper>

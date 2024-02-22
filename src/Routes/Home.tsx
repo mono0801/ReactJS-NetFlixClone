@@ -13,8 +13,10 @@ import Banner from "../Components/Banner";
 import Loading from "../Components/Loading";
 import Cards from "../Components/List/MovieCards";
 import MovieDetail from "../Components/Detail/MovieDetail";
+import { useWindowDimensions } from "../utils";
 
 const Wrapper = styled.div`
+    min-width: 530px;
     height: 200vh;
     background: black;
     overflow-x: hidden;
@@ -41,6 +43,7 @@ function Home() {
     const detailMovieMatch: PathMatch<string> | null = useMatch(
         "/movies/:category/:Id"
     );
+    const width = useWindowDimensions();
 
     return (
         <Wrapper>
@@ -53,6 +56,7 @@ function Home() {
                         videoId={nowPlaying?.results[0].id}
                         backdrop_path={nowPlaying?.results[0].backdrop_path}
                         title={nowPlaying?.results[0].title}
+                        // title={width + ""}
                         overview={nowPlaying?.results[0].overview}
                     />
                     {nowPlaying && topRated && upComing ? (
@@ -73,7 +77,7 @@ function Home() {
                                         cardsName="Top Rated"
                                         tagName="TopRated"
                                         cut={0}
-                                        top="100px"
+                                        top="110px"
                                     />
                                 </CardsContainer>
                                 <CardsContainer>
@@ -82,7 +86,7 @@ function Home() {
                                         cardsName="Up Coming"
                                         tagName="UpComing"
                                         cut={0}
-                                        top="400px"
+                                        top="420px"
                                     />
                                 </CardsContainer>
                             </CardsWrapper>

@@ -24,6 +24,7 @@ const Cardsheader = styled.div`
 // 영화 포스터 슬라이드 상단에 들어갈 슬라이더 이름
 const CardsTitle = styled.h4`
     font-size: 150%;
+    font-weight: bolder;
 `;
 // 영화 포스터 슬라이드 화살표를 감싸는 Div
 const CardsArrowContainer = styled.div`
@@ -52,7 +53,7 @@ const Slider = styled(motion.div)<{ offset: number }>`
     margin-top: 15px;
     display: grid;
     grid-template-columns: repeat(${(props) => props.offset}, 200px);
-    gap: 40px;
+    gap: 24px;
     position: absolute;
 
     // 첫번째 슬라이더의 포스터는 오른쪽으로 커지게
@@ -79,13 +80,13 @@ const CardsArrowVariant = {
 // 영화 포스터 슬라이드 애니메이션 설정
 const sliderVariants = {
     hidden: ({ width, isBack }: { width: number; isBack: boolean }) => ({
-        x: isBack ? -width : width * 1.06,
+        x: isBack ? -width : width,
     }),
     visible: {
-        x: "2.5%",
+        x: "0",
     },
     exit: ({ width, isBack }: { width: number; isBack: boolean }) => ({
-        x: isBack ? width * 1.02 : -width,
+        x: isBack ? width : -width,
     }),
 };
 
@@ -123,22 +124,22 @@ function MovieCards({
     // 현재 윈도우 사이트의 너비 반환하는 함수
     const width = useWindowDimensions();
     // offset : 한 슬라이드에 보여줄 Card 갯수
-    let offset = 7;
+    let offset = 8;
     // 반응형으로 설정
-    if (1830 <= window.innerWidth) {
+    if (1870 <= window.innerWidth) {
+        offset = 8;
+    } else if (1650 <= window.innerWidth && window.innerWidth < 1870) {
         offset = 7;
-    } else if (1600 <= window.innerWidth && window.innerWidth < 1830) {
+    } else if (1425 <= window.innerWidth && window.innerWidth < 1650) {
         offset = 6;
-    } else if (1350 <= window.innerWidth && window.innerWidth < 1600) {
+    } else if (1200 <= window.innerWidth && window.innerWidth < 1425) {
         offset = 5;
-    } else if (1100 <= window.innerWidth && window.innerWidth < 1350) {
+    } else if (975 <= window.innerWidth && window.innerWidth < 1200) {
         offset = 4;
-    } else if (850 <= window.innerWidth && window.innerWidth < 1100) {
+    } else if (752 <= window.innerWidth && window.innerWidth < 975) {
         offset = 3;
-    } else if (600 <= window.innerWidth && window.innerWidth < 850) {
-        offset = 2;
     } else {
-        offset = 1;
+        offset = 2;
     }
     // 가져온 영화 갯수
     const totalMovies = data.results.length - 1;
@@ -175,13 +176,13 @@ function MovieCards({
                     {cardsName + " - " + (index + 1) + " / " + (maxIndex + 1)}
                 </CardsTitle>
                 <CardsArrowContainer>
-                    {/* <CardsArrow
+                    <CardsArrow
                         variants={CardsArrowVariant}
                         whileHover="hover"
                         initial="normal"
                     >
                         <IoIosArrowDropleft onClick={decreaseIndex} />
-                    </CardsArrow> */}
+                    </CardsArrow>
                     <CardsArrow
                         variants={CardsArrowVariant}
                         whileHover="hover"
@@ -198,6 +199,7 @@ function MovieCards({
                 <Slider
                     key={index}
                     offset={offset}
+                    // layoutId={tagName}
                     variants={sliderVariants}
                     initial="hidden"
                     animate="visible"

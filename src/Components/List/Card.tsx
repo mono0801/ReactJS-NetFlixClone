@@ -6,8 +6,8 @@ import { makeImagePath } from "../../utils";
 
 // 검색된 영화
 const Poster = styled(motion.div)<{ bgPhoto: string }>`
-    width: 200px;
-    height: 300px;
+    width: 180px;
+    height: 270px;
     background-color: ${(props) => props.theme.black.lighter};
     background-image: url(${(props) => props.bgPhoto});
     background-size: cover;
@@ -25,7 +25,7 @@ const Poster = styled(motion.div)<{ bgPhoto: string }>`
 `;
 // 검색된 영화 제목
 const PosterInfo = styled(motion.div)`
-    width: 200px;
+    width: 100%;
     padding: 10px;
     position: absolute;
     bottom: 0;
@@ -124,7 +124,7 @@ function Card({
             initial="normal"
             whileHover={"hover"}
             transition={{ type: "tween" }}
-            bgPhoto={makeImagePath(poster_path || backdrop_path, "w200")}
+            bgPhoto={makeImagePath(poster_path || backdrop_path, "w300")}
             onClick={() => onCardClicked(id)}
         >
             <PosterInfo variants={PosterInfoVariants}>
