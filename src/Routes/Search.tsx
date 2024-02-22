@@ -22,6 +22,7 @@ import Loading from "../Components/Loading";
 import MovieDetail from "../Components/Detail/MovieDetail";
 import TvDetail from "../Components/Detail/TvDetail";
 import { useEffect } from "react";
+import { useWindowDimensions } from "../utils";
 
 const Wrapper = styled.div`
     padding: 60px;
@@ -71,12 +72,12 @@ const ListTitle = styled.h1`
     margin-bottom: 10px;
 `;
 // 검색된 리스트를 감싸는 container
-const CardContainer = styled.div`
+const CardContainer = styled.div<{ offset: number }>`
     width: 100%;
     height: auto;
     min-height: 28vh;
     display: grid;
-    grid-template-columns: repeat(7, 200px);
+    grid-template-columns: repeat(${(props) => props.offset}, 200px);
     grid-gap: 40px;
     // 마지막 슬라이더의 포스터는 왼쪽으로 커지게
     div:last-child {
@@ -130,6 +131,17 @@ function Search() {
         movieRefetch();
         tvRefetch();
     }, [keyword, movieRefetch, tvRefetch]);
+    const width = useWindowDimensions();
+    // offset : 한 슬라이드에 보여줄 Card 갯수
+    let offset = 7;
+    // 반응형으로 설정
+    if (1830 <= width) {
+        offset = 7;
+    } else if (1600 <= width && width < 1830) {
+        offset = 6;
+    } else {
+        offset = 5;
+    }
     return (
         <Wrapper>
             <SearchBar>
@@ -154,7 +166,7 @@ function Search() {
                     </SearchTitle>
                     <hr />
                     <ListTitle>🎬 Movie</ListTitle>
-                    <CardContainer>
+                    <CardContainer offset={offset}>
                         {movieSearch?.results.map((movie) => (
                             <Card
                                 key={movie.id}
@@ -169,7 +181,7 @@ function Search() {
                         ))}
                     </CardContainer>
                     <ListTitle>📺 TV Show</ListTitle>
-                    <CardContainer>
+                    <CardContainer offset={offset}>
                         {tvSearch?.results.map((tv) => (
                             <Card
                                 key={tv.id}

@@ -85,14 +85,14 @@ const sliderVariants = {
 };
 
 /**
- * Card 목록을 뵤여주는 Slider 리스트
+ * Card 목록을 보여주는 Slider 리스트
  * @param data API로 가져온 비디오 리스트
  * @param cardsName Cards 상단에 표시할 이름
  * @param tagName Cards의 이름 : 띄어쓰기 X
- * * @param cut 앞에서부터 cut에 설정한 숫자까지의 Card를 보여주지 않음
+ * @param cut 앞에서부터 cut에 설정한 숫자까지의 Card를 보여주지 않음
  * - 2라고 할 경우 앞에서부터 2번째까지는 리스트에 보여주지 않음
  * - Banner로 영화 1개가 쓰이므로 1을 설정함
- * @param top Cards의 x좌표 위치를 설정 : ex) -200px로 입력
+ * @param top Cards의 y좌표 위치를 설정 : ex) -200px로 입력
  * @returns 상세 정보창 Div
  */
 function TvCards({
@@ -103,8 +103,8 @@ function TvCards({
     top,
 }: {
     data: IGetTvResult;
-    cardsName: string;
-    tagName: string;
+    cardsName: "Popular" | "Top Rated" | "Airing Today";
+    tagName: "Popular" | "TopRated" | "AiringToday";
     cut: number;
     top: string;
 }) {

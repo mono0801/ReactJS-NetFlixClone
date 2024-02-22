@@ -38,6 +38,8 @@ const OverView = styled.p`
 
 /**
  * 메인 화면의 상단 배너
+ * @param category movie | tv
+ * @param videoId 해당 영상의 ID
  * @param backdrop_path 해당 영상의 Backdrop path
  * @param title 해당 영상의 제목 : 영화는 title, TV Show는 name
  * @param overview overview 해당 영상의 overview
@@ -50,7 +52,7 @@ function Banner({
     title,
     overview,
 }: {
-    category: string;
+    category: "movie" | "tv";
     videoId?: number;
     backdrop_path?: string;
     title?: string;

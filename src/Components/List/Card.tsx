@@ -67,6 +67,7 @@ const PosterInfoVariants = {
  * @param category movie | tv | search
  * @param searchCategory Search에서 사용 : movie | tv
  * @param keyword Search에서 검색한 키워드
+ * @param tagName Cards의 이름 : 띄어쓰기 X
  * @param id 해당 영상의 id
  * @param backdrop_path 해당 영상의 Backdrop path
  * @param poster_path 해당 영상의 Poster path

@@ -160,7 +160,6 @@ function MovieDetail({
     const detailMovieMatch: PathMatch<string> | null = useMatch(
         "/movies/:category/:Id"
     );
-    console.log(detailMovieMatch);
     // 받아온 ID를 통해 상세 정보 가져오기
     const { data, isLoading } = useQuery<IGetDetailMovieResult>(
         ["movie", "detail"],
