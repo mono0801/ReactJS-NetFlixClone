@@ -33,7 +33,7 @@ const Title = styled.h2`
 // 배너에 들어갈 영화 줄거리
 const OverView = styled.p`
     width: 100%;
-    font-size: 20px;
+    font-size: 17px;
 `;
 
 /**

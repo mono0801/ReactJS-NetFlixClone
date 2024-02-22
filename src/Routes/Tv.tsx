@@ -18,9 +18,14 @@ const Wrapper = styled.div`
     height: 200vh;
     background: black;
     overflow-x: hidden;
-    padding-bottom: 200px;
 `;
-const Div = styled.div`
+// Card list 전체를 감싸는 Div
+const CardsWrapper = styled.div`
+    height: 100vh;
+    width: 100%;
+`;
+// 각각의 Card list를 감싸는 Div
+const CardsContainer = styled.div`
     margin-bottom: 25px;
 `;
 
@@ -54,33 +59,35 @@ function Tv() {
                     />
                     {popular && topRated && airingToday ? (
                         <>
-                            <Div>
-                                <Cards
-                                    data={popular}
-                                    cardsName="Popular"
-                                    tagName="Popular"
-                                    cut={1}
-                                    top="-200px"
-                                />
-                            </Div>
-                            <Div>
-                                <Cards
-                                    data={topRated}
-                                    cardsName="Top Rated"
-                                    tagName="TopRated"
-                                    cut={0}
-                                    top="100px"
-                                />
-                            </Div>
-                            <Div>
-                                <Cards
-                                    data={airingToday}
-                                    cardsName="Airing Today"
-                                    tagName="AiringToday"
-                                    cut={0}
-                                    top="400px"
-                                />
-                            </Div>
+                            <CardsWrapper>
+                                <CardsContainer>
+                                    <Cards
+                                        data={popular}
+                                        cardsName="Popular"
+                                        tagName="Popular"
+                                        cut={1}
+                                        top="-200px"
+                                    />
+                                </CardsContainer>
+                                <CardsContainer>
+                                    <Cards
+                                        data={topRated}
+                                        cardsName="Top Rated"
+                                        tagName="TopRated"
+                                        cut={0}
+                                        top="100px"
+                                    />
+                                </CardsContainer>
+                                <CardsContainer>
+                                    <Cards
+                                        data={airingToday}
+                                        cardsName="Airing Today"
+                                        tagName="AiringToday"
+                                        cut={0}
+                                        top="400px"
+                                    />
+                                </CardsContainer>
+                            </CardsWrapper>
                         </>
                     ) : null}
                     <AnimatePresence>

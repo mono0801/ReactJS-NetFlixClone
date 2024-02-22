@@ -1,7 +1,7 @@
 // Tv Card 리스트를 보여줄 Slider
 import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
-import { IoIosArrowDropright } from "react-icons/io";
+import { IoIosArrowDropright, IoIosArrowDropleft } from "react-icons/io";
 import { styled } from "styled-components";
 import { IGetTvResult } from "../../api";
 import { useWindowDimensions } from "../../utils";
@@ -9,6 +9,7 @@ import Card from "./Card";
 
 // 배너 하단에 들어갈 영화 포스터 슬라이드
 const CardsWrapper = styled.div`
+    align-items: center;
     margin-left: 60px;
     margin-right: 60px;
     position: relative;
@@ -24,20 +25,27 @@ const Cardsheader = styled.div`
 const CardsTitle = styled.h4`
     font-size: 150%;
 `;
-// 영화 포스터 슬라이드 화살표
+// 영화 포스터 슬라이드 화살표를 감싸는 Div
+const CardsArrowContainer = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    div:last-child {
+        margin-left: 5px;
+    }
+`;
+// 영화 포스터 슬라이드 화살표를 전체를 감싸는 Div
 const CardsArrow = styled(motion.div)`
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 150%;
+    font-size: 175%;
     cursor: pointer;
 `;
 // 슬라이드에 들어갈 div
 const Slider = styled(motion.div)<{ offset: number }>`
     margin-top: 15px;
-    width: 1440px;
     display: grid;
-    place-items: center;
     grid-template-columns: repeat(${(props) => props.offset}, 200px);
     gap: 40px;
     position: absolute;
@@ -62,6 +70,18 @@ const CardsArrowVariant = {
             duration: 0.2,
         },
     },
+};
+// 영화 포스터 슬라이드 애니메이션 설정
+const sliderVariants = {
+    hidden: ({ width, isBack }: { width: number; isBack: boolean }) => ({
+        x: isBack ? -width : width * 1.06,
+    }),
+    visible: {
+        x: "2.5%",
+    },
+    exit: ({ width, isBack }: { width: number; isBack: boolean }) => ({
+        x: isBack ? width : -width,
+    }),
 };
 
 /**
@@ -90,9 +110,11 @@ function TvCards({
 }) {
     // SliderWrapper에서 현재 Slider가 무엇인지 식별
     const [index, setIndex] = useState(0);
-    // slider 애니메이션 중첩 실행 방지
+    // Slider 애니메이션 중첩 실행 방지
     const [leaving, setLeaving] = useState(false);
     const toggleLeaving = () => setLeaving((prev) => !prev);
+    // Slider 애니메이션이 뒤로가기 인지 앞으로 가기인지 구분
+    const [isBack, setIsBack] = useState(false);
     // 현재 윈도우 사이트의 너비 반환하는 함수
     const width = useWindowDimensions();
     // offset : 한 슬라이드에 보여줄 Card 갯수
@@ -115,7 +137,7 @@ function TvCards({
     }
     // 가져온 영화 갯수
     const totalMovies = data.results.length - 1;
-    // 가져온 영화 갯수 / 6 : 보여줘야될 Slider 갯수
+    // 가져온 영화 갯수 / offset : 보여줘야될 Slider 갯수
     const maxIndex = Math.ceil(totalMovies / offset) - 1;
     // index 증가
     const increaseIndex = () => {
@@ -125,7 +147,19 @@ function TvCards({
             toggleLeaving();
 
             // index가 Slider 갯수를 넘을 경우 0으로 초기화
-            setIndex((prev) => (prev === maxIndex ? 0 : prev + 1));
+            setIndex((prev) => (prev >= maxIndex ? 0 : prev + 1));
+            setIsBack(false);
+        }
+    };
+    const decreaseIndex = () => {
+        if (data) {
+            if (leaving) return;
+
+            toggleLeaving();
+
+            // index가 Slider 갯수를 넘을 경우 0으로 초기화
+            setIndex((prev) => (prev == 0 ? maxIndex : prev - 1));
+            setIsBack(true);
         }
     };
 
@@ -135,14 +169,22 @@ function TvCards({
                 <CardsTitle>
                     {cardsName + " - " + (index + 1) + " / " + (maxIndex + 1)}
                 </CardsTitle>
-                <CardsArrow
-                    onClick={increaseIndex}
-                    variants={CardsArrowVariant}
-                    whileHover="hover"
-                    initial="normal"
-                >
-                    <IoIosArrowDropright />
-                </CardsArrow>
+                <CardsArrowContainer>
+                    {/* <CardsArrow
+                        variants={CardsArrowVariant}
+                        whileHover="hover"
+                        initial="normal"
+                    >
+                        <IoIosArrowDropleft onClick={decreaseIndex} />
+                    </CardsArrow> */}
+                    <CardsArrow
+                        variants={CardsArrowVariant}
+                        whileHover="hover"
+                        initial="normal"
+                    >
+                        <IoIosArrowDropright onClick={increaseIndex} />
+                    </CardsArrow>
+                </CardsArrowContainer>
             </Cardsheader>
             {/* 요소가 생기거나 사라질 때 효과 부여 */}
             {/* onExitComplete : 애니메이션이 완전히 끝날 때 실행 */}
@@ -150,9 +192,11 @@ function TvCards({
                 <Slider
                     key={index}
                     offset={offset}
-                    initial={{ x: width }}
-                    animate={{ x: 0 }}
-                    exit={{ x: -width }}
+                    variants={sliderVariants}
+                    initial="hidden"
+                    animate="visible"
+                    exit="exit"
+                    custom={{ width, isBack }}
                     transition={{ type: "tween", duration: 1 }}
                 >
                     {/* 첫번째 영화는 배너에 사용했으므로 제외 */}

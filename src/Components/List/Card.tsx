@@ -25,7 +25,7 @@ const Poster = styled(motion.div)<{ bgPhoto: string }>`
 `;
 // 검색된 영화 제목
 const PosterInfo = styled(motion.div)`
-    width: 100%;
+    width: 200px;
     padding: 10px;
     position: absolute;
     bottom: 0;

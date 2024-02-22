@@ -30,8 +30,8 @@ const CardsArrowContainer = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    div:first-child {
-        margin-right: 5px;
+    div:last-child {
+        margin-left: 5px;
     }
 `;
 // 영화 포스터 슬라이드 화살표를 전체를 감싸는 Div
@@ -44,14 +44,12 @@ const CardsArrow = styled(motion.div)`
 `;
 // const SliderContainer = styled(motion.div)`
 //     width: 100%;
-//     position: absolute;
-//     left: 50%;
-//     transform: translateX(-50%);
+//     margin-left: auto;
+//     margin-right: auto;
 // `;
 // 슬라이드에 들어갈 div
 const Slider = styled(motion.div)<{ offset: number }>`
     margin-top: 15px;
-    margin-left: 47px;
     display: grid;
     grid-template-columns: repeat(${(props) => props.offset}, 200px);
     gap: 40px;
@@ -78,15 +76,16 @@ const CardsArrowVariant = {
         },
     },
 };
+// 영화 포스터 슬라이드 애니메이션 설정
 const sliderVariants = {
     hidden: ({ width, isBack }: { width: number; isBack: boolean }) => ({
-        x: isBack ? -width : width,
+        x: isBack ? -width : width * 1.06,
     }),
     visible: {
-        x: 0,
+        x: "2.5%",
     },
     exit: ({ width, isBack }: { width: number; isBack: boolean }) => ({
-        x: isBack ? width : -width,
+        x: isBack ? width * 1.02 : -width,
     }),
 };
 
@@ -153,7 +152,7 @@ function MovieCards({
             toggleLeaving();
 
             // index가 Slider 갯수를 넘을 경우 0으로 초기화
-            setIndex((prev) => (prev === maxIndex ? 0 : prev + 1));
+            setIndex((prev) => (prev >= maxIndex ? 0 : prev + 1));
             setIsBack(false);
         }
     };
@@ -164,7 +163,7 @@ function MovieCards({
             toggleLeaving();
 
             // index가 Slider 갯수를 넘을 경우 0으로 초기화
-            setIndex((prev) => (prev === 0 ? maxIndex : prev - 1));
+            setIndex((prev) => (prev == 0 ? maxIndex : prev - 1));
             setIsBack(true);
         }
     };
@@ -176,13 +175,13 @@ function MovieCards({
                     {cardsName + " - " + (index + 1) + " / " + (maxIndex + 1)}
                 </CardsTitle>
                 <CardsArrowContainer>
-                    <CardsArrow
+                    {/* <CardsArrow
                         variants={CardsArrowVariant}
                         whileHover="hover"
                         initial="normal"
                     >
                         <IoIosArrowDropleft onClick={decreaseIndex} />
-                    </CardsArrow>
+                    </CardsArrow> */}
                     <CardsArrow
                         variants={CardsArrowVariant}
                         whileHover="hover"
