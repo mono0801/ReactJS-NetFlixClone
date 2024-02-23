@@ -1,6 +1,6 @@
 // Movie Card 리스트를 보여줄 Slider
 import { AnimatePresence, motion } from "framer-motion";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { IoIosArrowDropright, IoIosArrowDropleft } from "react-icons/io";
 import { styled } from "styled-components";
 import { IGetMoviesResult } from "../../api";
@@ -9,6 +9,7 @@ import Card from "./Card";
 
 // 배너 하단에 들어갈 영화 포스터 슬라이드
 const CardsWrapper = styled.div`
+    height: 300px;
     align-items: center;
     margin-left: 60px;
     margin-right: 60px;
@@ -77,18 +78,6 @@ const CardsArrowVariant = {
         },
     },
 };
-// 영화 포스터 슬라이드 애니메이션 설정
-const sliderVariants = {
-    hidden: ({ width, isBack }: { width: number; isBack: boolean }) => ({
-        x: isBack ? -width : width,
-    }),
-    visible: {
-        x: "0",
-    },
-    exit: ({ width, isBack }: { width: number; isBack: boolean }) => ({
-        x: isBack ? width : -width,
-    }),
-};
 
 /**
  * Card 목록을 보여주는 Slider 리스트
@@ -120,7 +109,7 @@ function MovieCards({
     const [leaving, setLeaving] = useState(false);
     const toggleLeaving = () => setLeaving((prev) => !prev);
     // Slider 애니메이션이 뒤로가기 인지 앞으로 가기인지 구분
-    const [isBack, setIsBack] = useState(false);
+    const isBack = useRef(false);
     // 현재 윈도우 사이트의 너비 반환하는 함수
     const width = useWindowDimensions();
     // offset : 한 슬라이드에 보여줄 Card 갯수
@@ -154,7 +143,7 @@ function MovieCards({
 
             // index가 Slider 갯수를 넘을 경우 0으로 초기화
             setIndex((prev) => (prev >= maxIndex ? 0 : prev + 1));
-            setIsBack(false);
+            isBack.current = false;
         }
     };
     const decreaseIndex = () => {
@@ -165,8 +154,20 @@ function MovieCards({
 
             // index가 Slider 갯수를 넘을 경우 0으로 초기화
             setIndex((prev) => (prev == 0 ? maxIndex : prev - 1));
-            setIsBack(true);
+            isBack.current = true;
         }
+    };
+    // 영화 포스터 슬라이드 애니메이션 설정
+    const sliderVariants = {
+        hidden: ({ width }: { width: number }) => ({
+            x: isBack.current ? -width : width,
+        }),
+        visible: {
+            x: "0",
+        },
+        exit: ({ width }: { width: number }) => ({
+            x: isBack.current ? width : -width,
+        }),
     };
 
     return (

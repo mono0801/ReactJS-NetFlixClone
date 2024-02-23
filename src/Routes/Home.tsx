@@ -77,7 +77,7 @@ function Home() {
                                         cardsName="Top Rated"
                                         tagName="TopRated"
                                         cut={0}
-                                        top="110px"
+                                        top="-175px"
                                     />
                                 </CardsContainer>
                                 <CardsContainer>
@@ -86,7 +86,7 @@ function Home() {
                                         cardsName="Up Coming"
                                         tagName="UpComing"
                                         cut={0}
-                                        top="420px"
+                                        top="-150px"
                                     />
                                 </CardsContainer>
                             </CardsWrapper>
