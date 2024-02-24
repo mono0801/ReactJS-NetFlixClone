@@ -1,82 +1,11 @@
 // Tv Card 리스트를 보여줄 Slider
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import { useRef, useState } from "react";
 import { IoIosArrowDropright, IoIosArrowDropleft } from "react-icons/io";
-import { styled } from "styled-components";
 import { IGetTvResult } from "../../api";
 import { useWindowDimensions } from "../../utils";
+import * as Cards from "../../css/Cards";
 import Card from "./Card";
-
-// 배너 하단에 들어갈 영화 포스터 슬라이드
-const CardsWrapper = styled.div`
-    align-items: center;
-    margin-left: 60px;
-    margin-right: 60px;
-    position: relative;
-`;
-// 영화 포스터 슬라이드 상단
-const Cardsheader = styled.div`
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-`;
-// 영화 포스터 슬라이드 상단에 들어갈 슬라이더 이름
-const CardsTitle = styled.h4`
-    font-size: 150%;
-    font-weight: bolder;
-`;
-// 영화 포스터 슬라이드 화살표를 감싸는 Div
-const CardsArrowContainer = styled.div`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    div:last-child {
-        margin-left: 5px;
-    }
-`;
-// 영화 포스터 슬라이드 화살표를 전체를 감싸는 Div
-const CardsArrow = styled(motion.div)`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 175%;
-    cursor: pointer;
-`;
-// const SliderContainer = styled(motion.div)`
-//     width: 100%;
-//     margin-left: auto;
-//     margin-right: auto;
-// `;
-// 슬라이드에 들어갈 div
-const Slider = styled(motion.div)<{ offset: number }>`
-    margin-top: 15px;
-    display: grid;
-    grid-template-columns: repeat(${(props) => props.offset}, 200px);
-    gap: 24px;
-    position: absolute;
-
-    // 첫번째 슬라이더의 포스터는 오른쪽으로 커지게
-    div:first-child {
-        transform-origin: center left;
-    }
-    // 마지막 슬라이더의 포스터는 왼쪽으로 커지게
-    div:last-child {
-        transform-origin: center right;
-    }
-`;
-// 영화 포스터 슬라이드 화살표 애니메이션 설정
-const CardsArrowVariant = {
-    nomal: {
-        scale: 1,
-    },
-    hover: {
-        scale: 1.25,
-        transition: {
-            duration: 0.2,
-        },
-    },
-};
 
 /**
  * Card 목록을 보여주는 Slider 리스트
@@ -170,32 +99,32 @@ function TvCards({
     };
 
     return (
-        <CardsWrapper style={{ top: top }}>
-            <Cardsheader>
-                <CardsTitle>
+        <Cards.CardsWrapper style={{ top: top }}>
+            <Cards.Cardsheader>
+                <Cards.CardsTitle>
                     {cardsName + " - " + (index + 1) + " / " + (maxIndex + 1)}
-                </CardsTitle>
-                <CardsArrowContainer>
-                    <CardsArrow
-                        variants={CardsArrowVariant}
+                </Cards.CardsTitle>
+                <Cards.CardsArrowContainer>
+                    <Cards.CardsArrow
+                        variants={Cards.CardsArrowVariant}
                         whileHover="hover"
                         initial="normal"
                     >
                         <IoIosArrowDropleft onClick={decreaseIndex} />
-                    </CardsArrow>
-                    <CardsArrow
-                        variants={CardsArrowVariant}
+                    </Cards.CardsArrow>
+                    <Cards.CardsArrow
+                        variants={Cards.CardsArrowVariant}
                         whileHover="hover"
                         initial="normal"
                     >
                         <IoIosArrowDropright onClick={increaseIndex} />
-                    </CardsArrow>
-                </CardsArrowContainer>
-            </Cardsheader>
+                    </Cards.CardsArrow>
+                </Cards.CardsArrowContainer>
+            </Cards.Cardsheader>
             {/* 요소가 생기거나 사라질 때 효과 부여 */}
             {/* onExitComplete : 애니메이션이 완전히 끝날 때 실행 */}
             <AnimatePresence initial={false} onExitComplete={toggleLeaving}>
-                <Slider
+                <Cards.Slider
                     key={index}
                     offset={offset}
                     variants={sliderVariants}
@@ -225,9 +154,9 @@ function TvCards({
                                 title={movie.name}
                             />
                         ))}
-                </Slider>
+                </Cards.Slider>
             </AnimatePresence>
-        </CardsWrapper>
+        </Cards.CardsWrapper>
     );
 }
 

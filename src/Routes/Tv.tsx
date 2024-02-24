@@ -2,7 +2,6 @@
 import { AnimatePresence } from "framer-motion";
 import { useQuery } from "react-query";
 import { PathMatch, useMatch } from "react-router-dom";
-import styled from "styled-components";
 import {
     getAiringTodayTves,
     getTopRatedTves,
@@ -13,23 +12,7 @@ import Banner from "../Components/Banner";
 import Loading from "../Components/Loading";
 import TvDetail from "../Components/Detail/TvDetail";
 import Cards from "../Components/List/TvCards";
-import { useWindowDimensions } from "../utils";
-
-const Wrapper = styled.div`
-    min-width: 530px;
-    height: 200vh;
-    background: black;
-    overflow-x: hidden;
-`;
-// Card list 전체를 감싸는 Div
-const CardsWrapper = styled.div`
-    height: 100vh;
-    width: 100%;
-`;
-// 각각의 Card list를 감싸는 Div
-const CardsContainer = styled.div`
-    margin-bottom: 25px;
-`;
+import * as style from "../css/style";
 
 function Tv() {
     // themoviedb.org로 부터 가져온 영화 정보
@@ -44,10 +27,10 @@ function Tv() {
     // 현재 우리가 어느 route에 있는지 확인한다
     const detailTvMatch: PathMatch<string> | null =
         useMatch("/tv/:category/:Id");
-    const width = useWindowDimensions();
+
     // <></> : fragment -> 많은 요소를 공통된 부모 없이 연이어서 리턴할 때 사용
     return (
-        <Wrapper>
+        <style.Wrapper>
             {popularLoding && topRatedLoding && airingTodayLoding ? (
                 <Loading />
             ) : (
@@ -62,8 +45,8 @@ function Tv() {
                     />
                     {popular && topRated && airingToday ? (
                         <>
-                            <CardsWrapper>
-                                <CardsContainer>
+                            <style.CardsWrapper>
+                                <style.CardsContainer>
                                     <Cards
                                         data={popular}
                                         cardsName="Popular"
@@ -71,26 +54,26 @@ function Tv() {
                                         cut={1}
                                         top="-200px"
                                     />
-                                </CardsContainer>
-                                <CardsContainer>
+                                </style.CardsContainer>
+                                <style.CardsContainer>
                                     <Cards
                                         data={topRated}
                                         cardsName="Top Rated"
                                         tagName="TopRated"
                                         cut={0}
-                                        top="110px"
+                                        top="-175px"
                                     />
-                                </CardsContainer>
-                                <CardsContainer>
+                                </style.CardsContainer>
+                                <style.CardsContainer>
                                     <Cards
                                         data={airingToday}
                                         cardsName="Airing Today"
                                         tagName="AiringToday"
                                         cut={0}
-                                        top="420px"
+                                        top="-150px"
                                     />
-                                </CardsContainer>
-                            </CardsWrapper>
+                                </style.CardsContainer>
+                            </style.CardsWrapper>
                         </>
                     ) : null}
                     <AnimatePresence>
@@ -102,7 +85,7 @@ function Tv() {
                     </AnimatePresence>
                 </>
             )}
-        </Wrapper>
+        </style.Wrapper>
     );
 }
 

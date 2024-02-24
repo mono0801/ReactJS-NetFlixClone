@@ -2,7 +2,6 @@
 import { AnimatePresence } from "framer-motion";
 import { useQuery } from "react-query";
 import { PathMatch, useMatch } from "react-router-dom";
-import styled from "styled-components";
 import {
     getMovies,
     getTopRatedMovies,
@@ -13,23 +12,7 @@ import Banner from "../Components/Banner";
 import Loading from "../Components/Loading";
 import Cards from "../Components/List/MovieCards";
 import MovieDetail from "../Components/Detail/MovieDetail";
-import { useWindowDimensions } from "../utils";
-
-const Wrapper = styled.div`
-    min-width: 530px;
-    height: 200vh;
-    background: black;
-    overflow-x: hidden;
-`;
-// Card list 전체를 감싸는 Div
-const CardsWrapper = styled.div`
-    height: 100vh;
-    width: 100%;
-`;
-// 각각의 Card list를 감싸는 Div
-const CardsContainer = styled.div`
-    margin-bottom: 25px;
-`;
+import * as style from "../css/style";
 
 function Home() {
     // themoviedb.org로 부터 가져온 영화 정보
@@ -43,10 +26,9 @@ function Home() {
     const detailMovieMatch: PathMatch<string> | null = useMatch(
         "/movies/:category/:Id"
     );
-    const width = useWindowDimensions();
 
     return (
-        <Wrapper>
+        <style.Wrapper>
             {nowPlayingLoding && topRatedLoding && upComingLoding ? (
                 <Loading />
             ) : (
@@ -61,8 +43,8 @@ function Home() {
                     />
                     {nowPlaying && topRated && upComing ? (
                         <>
-                            <CardsWrapper>
-                                <CardsContainer>
+                            <style.CardsWrapper>
+                                <style.CardsContainer>
                                     <Cards
                                         data={nowPlaying}
                                         cardsName="Now Playing"
@@ -70,8 +52,8 @@ function Home() {
                                         cut={1}
                                         top="-200px"
                                     />
-                                </CardsContainer>
-                                <CardsContainer>
+                                </style.CardsContainer>
+                                <style.CardsContainer>
                                     <Cards
                                         data={topRated}
                                         cardsName="Top Rated"
@@ -79,8 +61,8 @@ function Home() {
                                         cut={0}
                                         top="-175px"
                                     />
-                                </CardsContainer>
-                                <CardsContainer>
+                                </style.CardsContainer>
+                                <style.CardsContainer>
                                     <Cards
                                         data={upComing}
                                         cardsName="Up Coming"
@@ -88,8 +70,8 @@ function Home() {
                                         cut={0}
                                         top="-150px"
                                     />
-                                </CardsContainer>
-                            </CardsWrapper>
+                                </style.CardsContainer>
+                            </style.CardsWrapper>
                         </>
                     ) : null}
                     <AnimatePresence>
@@ -101,7 +83,7 @@ function Home() {
                     </AnimatePresence>
                 </>
             )}
-        </Wrapper>
+        </style.Wrapper>
     );
 }
 export default Home;

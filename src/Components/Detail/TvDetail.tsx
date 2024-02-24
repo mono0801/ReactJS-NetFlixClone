@@ -1,126 +1,9 @@
 // Card 클릭 시 확대되는 상세 정보창
-import { motion } from "framer-motion";
 import { useQuery } from "react-query";
 import { PathMatch, useMatch, useNavigate } from "react-router-dom";
-import { styled } from "styled-components";
 import { getVideoDetail, IGetDetailTvResult } from "../../api";
 import { makeImagePath } from "../../utils";
-
-// Card 클릭 시 확대되는 상세 정보창을 끄기 위한 배경 오버레이
-const Overlay = styled(motion.div)`
-    position: fixed;
-    top: 0;
-    left: 0px;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    opacity: 0;
-`;
-// Card 클릭 시 확대되는 상세 정보창
-const Info = styled(motion.div)`
-    width: 50vw;
-    height: 80vh;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    margin: auto;
-    background-color: ${(props) => props.theme.black.lighter};
-    border-radius: 20px;
-    overflow: auto;
-
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-    &::-webkit-scrollbar {
-        display: none;
-    }
-`;
-// 상세 정보창 상단에 들어갈 영화 사진
-const InfoCover = styled.div`
-    width: 100%;
-    height: 400px;
-    background-size: cover;
-    background-position: center center;
-    display: grid;
-    grid-template-columns: 220px auto;
-`;
-// 상세 정보창 상단 왼쪽에 들어갈 영화 포스터를 감싸는 div
-const InfoPosterWrapper = styled.div`
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-`;
-// 상세 정보창 상단 왼쪽에 들어갈 영화 포스터
-const InfoPoster = styled.img`
-    margin-left: 20px;
-`;
-// 상세 정보창 상단 오른쪽에 들어갈 영화 정보를 감싸는 div
-const InfoTitleWrapper = styled.div``;
-// 상세 정보창 상단 오른쪽에 들어갈 영화 제목
-const InfoTitle = styled.h2`
-    color: ${(props) => props.theme.white.lighter};
-    font-size: 35px;
-    margin-top: 50px;
-    margin-left: 10px;
-`;
-// 상세 정보창 상단 오른쪽에 들어갈 영화 원래 제목
-const InfoOriginalTitle = styled.h4`
-    color: gray;
-    font-size: 24px;
-    margin-top: 10px;
-    margin-left: 20px;
-`;
-// 상세 정보창 상단 오른쪽에 들어갈 영화의 부속 정보
-const InfoString = styled.h6`
-    color: ${(props) => props.theme.white.lighter};
-    font-size: 14px;
-    margin-top: 10px;
-    margin-left: 25px;
-    &::before {
-        content: "ㆍ";
-        color: ${(props) => props.theme.white.darker};
-    }
-`;
-// 상세 정보창 하단 div
-const InfoContainer = styled.div`
-    padding: 20px;
-    display: grid;
-    grid-template-columns: 200px 2px auto;
-`;
-// 상세 정보창 하단 왼쪽에 들어갈 영화 로고 리스트를 감싸는 div
-const InfoLogo = styled.div`
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-`;
-// 상세 정보창 하단 왼쪽에 들어갈 영화 로고를 감싸는 div
-const LogoContainer = styled.div`
-    height: 100%;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-`;
-// 상세 정보창 하단 왼쪽에 들어갈 영화 로고
-const Logo = styled.img`
-    background-color: ${(props) => props.theme.white.lighter};
-    width: 50px;
-    height: 50px;
-`;
-// 상세 정보창 하단 오른쪽에 들어갈 영화 줄거리
-const InfoOverView = styled.p`
-    padding: 20px;
-    color: ${(props) => props.theme.white.lighter};
-`;
-// Div를 구분하는 수직 구분선
-const HorizonBar = styled.div`
-    background-color: ${(props) => props.theme.white.lighter};
-    width: 100%;
-    height: 100%;
-`;
+import * as detail from "../../css/Detail";
 
 /**
  * Movie List의 Card 클릭 시 나오는 상세 정보 창
@@ -150,13 +33,13 @@ function TvDetail({ keyword, videoId }: { keyword?: string; videoId: string }) {
 
     return (
         <>
-            <Overlay
+            <detail.Overlay
                 onClick={onOverlayClicked}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
             />
-            <Info layoutId={detailTvMatch?.params.category + videoId}>
-                <InfoCover
+            <detail.Info layoutId={detailTvMatch?.params.category + videoId}>
+                <detail.InfoCover
                     style={{
                         backgroundImage: `linear-gradient(to top, transparent,black), url(${makeImagePath(
                             String(data?.backdrop_path),
@@ -164,60 +47,60 @@ function TvDetail({ keyword, videoId }: { keyword?: string; videoId: string }) {
                         )})`,
                     }}
                 >
-                    <InfoPosterWrapper>
-                        <InfoPoster
+                    <detail.InfoPosterWrapper>
+                        <detail.InfoPoster
                             src={makeImagePath(
                                 String(data?.poster_path),
                                 "w200"
                             )}
                         />
-                    </InfoPosterWrapper>
-                    <InfoTitleWrapper>
-                        <InfoTitle>{data?.name}</InfoTitle>
-                        <InfoOriginalTitle>
+                    </detail.InfoPosterWrapper>
+                    <detail.InfoTitleWrapper>
+                        <detail.InfoTitle>{data?.name}</detail.InfoTitle>
+                        <detail.InfoOriginalTitle>
                             {data?.original_name}
-                        </InfoOriginalTitle>
-                        <InfoString>
+                        </detail.InfoOriginalTitle>
+                        <detail.InfoString>
                             {"장르 : " +
                                 data?.genres?.map((props) => " " + props.name)}
-                        </InfoString>
-                        <InfoString>
+                        </detail.InfoString>
+                        <detail.InfoString>
                             {"평점 : " + data?.vote_average.toFixed(1)}
-                        </InfoString>
-                        <InfoString>
+                        </detail.InfoString>
+                        <detail.InfoString>
                             {"개봉국가 : " +
                                 data?.production_countries[0]?.name}
-                        </InfoString>
-                        <InfoString>
+                        </detail.InfoString>
+                        <detail.InfoString>
                             {"언어 : " +
                                 data?.spoken_languages[0]?.english_name}
-                        </InfoString>
-                        <InfoString>
+                        </detail.InfoString>
+                        <detail.InfoString>
                             {"시즌 : " + data?.number_of_seasons}
-                        </InfoString>
-                        <InfoString>
+                        </detail.InfoString>
+                        <detail.InfoString>
                             {"에피소드 개수 : " + data?.number_of_episodes}
-                        </InfoString>
-                    </InfoTitleWrapper>
-                </InfoCover>
-                <InfoContainer>
-                    <InfoLogo>
+                        </detail.InfoString>
+                    </detail.InfoTitleWrapper>
+                </detail.InfoCover>
+                <detail.InfoContainer>
+                    <detail.InfoLogo>
                         {data?.production_companies?.map((props) => (
-                            <LogoContainer key={props.id}>
-                                <Logo
+                            <detail.LogoContainer key={props.id}>
+                                <detail.Logo
                                     key={props.id}
                                     src={makeImagePath(props.logo_path, "w200")}
                                     title={props.name}
                                 />
-                            </LogoContainer>
+                            </detail.LogoContainer>
                         ))}
-                    </InfoLogo>
-                    <HorizonBar />
-                    <InfoOverView>
+                    </detail.InfoLogo>
+                    <detail.HorizonBar />
+                    <detail.InfoOverView>
                         {data?.overview || "줄거리가 존재하지 않습니다"}
-                    </InfoOverView>
-                </InfoContainer>
-            </Info>
+                    </detail.InfoOverView>
+                </detail.InfoContainer>
+            </detail.Info>
         </>
     );
 }
