@@ -55,18 +55,18 @@ function Home() {
                                 </style.CardsContainer>
                                 <style.CardsContainer>
                                     <Cards
-                                        data={topRated}
-                                        cardsName="Top Rated"
-                                        tagName="TopRated"
+                                        data={upComing}
+                                        cardsName="Up Coming"
+                                        tagName="UpComing"
                                         cut={0}
                                         top="-175px"
                                     />
                                 </style.CardsContainer>
                                 <style.CardsContainer>
                                     <Cards
-                                        data={upComing}
-                                        cardsName="Up Coming"
-                                        tagName="UpComing"
+                                        data={topRated}
+                                        cardsName="Top Rated"
+                                        tagName="TopRated"
                                         cut={0}
                                         top="-150px"
                                     />

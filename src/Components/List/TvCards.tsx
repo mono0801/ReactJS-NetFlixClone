@@ -91,7 +91,7 @@ function TvCards({
             x: isBack.current ? -width : width,
         }),
         visible: {
-            x: "0",
+            x: 0,
         },
         exit: ({ width }: { width: number }) => ({
             x: isBack.current ? width : -width,
@@ -101,9 +101,7 @@ function TvCards({
     return (
         <Cards.CardsWrapper style={{ top: top }}>
             <Cards.Cardsheader>
-                <Cards.CardsTitle>
-                    {cardsName + " - " + (index + 1) + " / " + (maxIndex + 1)}
-                </Cards.CardsTitle>
+                <Cards.CardsTitle>{cardsName}</Cards.CardsTitle>
                 <Cards.CardsArrowContainer>
                     <Cards.CardsArrow
                         variants={Cards.CardsArrowVariant}
@@ -112,6 +110,9 @@ function TvCards({
                     >
                         <IoIosArrowDropleft onClick={decreaseIndex} />
                     </Cards.CardsArrow>
+                    <Cards.Index>
+                        {index + 1 + " / " + (maxIndex + 1)}
+                    </Cards.Index>
                     <Cards.CardsArrow
                         variants={Cards.CardsArrowVariant}
                         whileHover="hover"
@@ -133,6 +134,7 @@ function TvCards({
                     exit="exit"
                     custom={{ width, isBack }}
                     transition={{ type: "tween", duration: 1 }}
+                    style={{ translateX: "-50%" }}
                 >
                     {/* 첫번째 영화는 배너에 사용했으므로 제외 */}
                     {data?.results

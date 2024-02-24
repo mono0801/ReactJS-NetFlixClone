@@ -57,18 +57,18 @@ function Tv() {
                                 </style.CardsContainer>
                                 <style.CardsContainer>
                                     <Cards
-                                        data={topRated}
-                                        cardsName="Top Rated"
-                                        tagName="TopRated"
+                                        data={airingToday}
+                                        cardsName="Airing Today"
+                                        tagName="AiringToday"
                                         cut={0}
                                         top="-175px"
                                     />
                                 </style.CardsContainer>
                                 <style.CardsContainer>
                                     <Cards
-                                        data={airingToday}
-                                        cardsName="Airing Today"
-                                        tagName="AiringToday"
+                                        data={topRated}
+                                        cardsName="Top Rated"
+                                        tagName="TopRated"
                                         cut={0}
                                         top="-150px"
                                     />

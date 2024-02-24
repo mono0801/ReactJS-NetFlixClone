@@ -91,7 +91,7 @@ function MovieCards({
             x: isBack.current ? -width : width,
         }),
         visible: {
-            x: "0",
+            x: 0,
         },
         exit: ({ width }: { width: number }) => ({
             x: isBack.current ? width : -width,
@@ -101,9 +101,7 @@ function MovieCards({
     return (
         <Cards.CardsWrapper style={{ top: top }}>
             <Cards.Cardsheader>
-                <Cards.CardsTitle>
-                    {cardsName + " - " + (index + 1) + " / " + (maxIndex + 1)}
-                </Cards.CardsTitle>
+                <Cards.CardsTitle>{cardsName}</Cards.CardsTitle>
                 <Cards.CardsArrowContainer>
                     <Cards.CardsArrow
                         variants={Cards.CardsArrowVariant}
@@ -112,6 +110,9 @@ function MovieCards({
                     >
                         <IoIosArrowDropleft onClick={decreaseIndex} />
                     </Cards.CardsArrow>
+                    <Cards.Index>
+                        {index + 1 + " / " + (maxIndex + 1)}
+                    </Cards.Index>
                     <Cards.CardsArrow
                         variants={Cards.CardsArrowVariant}
                         whileHover="hover"
@@ -124,7 +125,6 @@ function MovieCards({
             {/* 요소가 생기거나 사라질 때 효과 부여 */}
             {/* onExitComplete : 애니메이션이 완전히 끝날 때 실행 */}
             <AnimatePresence initial={false} onExitComplete={toggleLeaving}>
-                {/* <SliderContainer> */}
                 <Cards.Slider
                     key={index}
                     offset={offset}
@@ -135,6 +135,7 @@ function MovieCards({
                     exit="exit"
                     custom={{ width, isBack }}
                     transition={{ type: "tween", duration: 1 }}
+                    style={{ translateX: "-50%" }}
                 >
                     {/* 첫번째 영화는 배너에 사용했으므로 제외 */}
                     {data?.results
@@ -157,7 +158,6 @@ function MovieCards({
                             />
                         ))}
                 </Cards.Slider>
-                {/* </SliderContainer> */}
             </AnimatePresence>
         </Cards.CardsWrapper>
     );
