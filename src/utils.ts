@@ -1,5 +1,6 @@
 // 자주 사용할 함수 라이브러리
 import { useEffect, useState } from "react";
+// import notFound from "../public/img/";
 
 // 영화 포스터 가져오는 함수
 /**
@@ -8,7 +9,11 @@ import { useEffect, useState } from "react";
  @returns 해당 영화 포스터 값 반환
  */
 export function makeImagePath(id: string, width?: string) {
+    // if (id === "" || id === null || id === undefined) {
+    //     return notFound;
+    // } else {
     return `https://image.tmdb.org/t/p/${width ? width : "original"}/${id}`;
+    // }
 }
 
 // 윈도우의 너비를 반환하는 함수

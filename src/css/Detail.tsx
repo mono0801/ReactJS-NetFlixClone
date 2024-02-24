@@ -12,6 +12,7 @@ export const Overlay = styled(motion.div)`
     background-color: rgba(0, 0, 0, 0.5);
     opacity: 0;
 `;
+
 // Card 클릭 시 확대되는 상세 정보창
 export const Info = styled(motion.div)`
     width: 50vw;
@@ -32,6 +33,7 @@ export const Info = styled(motion.div)`
         display: none;
     }
 `;
+
 // 상세 정보창 상단에 들어갈 영화 사진
 export const InfoCover = styled.div`
     width: 100%;
@@ -41,6 +43,7 @@ export const InfoCover = styled.div`
     display: grid;
     grid-template-columns: 220px auto;
 `;
+
 // 상세 정보창 상단 왼쪽에 들어갈 영화 포스터를 감싸는 div
 export const InfoPosterWrapper = styled.div`
     width: 100%;
@@ -49,12 +52,15 @@ export const InfoPosterWrapper = styled.div`
     justify-content: center;
     align-items: center;
 `;
+
 // 상세 정보창 상단 왼쪽에 들어갈 영화 포스터
 export const InfoPoster = styled.img`
     margin-left: 20px;
 `;
+
 // 상세 정보창 상단 오른쪽에 들어갈 영화 정보를 감싸는 div
 export const InfoTitleWrapper = styled.div``;
+
 // 상세 정보창 상단 오른쪽에 들어갈 영화 제목
 export const InfoTitle = styled.h2`
     color: ${(props) => props.theme.white.lighter};
@@ -62,6 +68,7 @@ export const InfoTitle = styled.h2`
     margin-top: 50px;
     margin-left: 10px;
 `;
+
 // 상세 정보창 상단 오른쪽에 들어갈 영화 원래 제목
 export const InfoOriginalTitle = styled.h4`
     font-weight: bold;
@@ -69,6 +76,7 @@ export const InfoOriginalTitle = styled.h4`
     margin-top: 10px;
     margin-left: 20px;
 `;
+
 // 상세 정보창 상단 오른쪽에 들어갈 영화 개요
 export const InfoTagline = styled.h6`
     color: ${(props) => props.theme.white.lighter};
@@ -80,6 +88,7 @@ export const InfoTagline = styled.h6`
         color: ${(props) => props.theme.white.darker};
     }
 `;
+
 // 상세 정보창 상단 오른쪽에 들어갈 영화의 부속 정보
 export const InfoString = styled.h6`
     color: ${(props) => props.theme.white.lighter};
@@ -91,18 +100,21 @@ export const InfoString = styled.h6`
         color: ${(props) => props.theme.white.darker};
     }
 `;
+
 // 상세 정보창 하단 div
 export const InfoContainer = styled.div`
     padding: 20px;
     display: grid;
     grid-template-columns: 200px 2px auto;
 `;
+
 // 상세 정보창 하단 왼쪽에 들어갈 영화 로고 리스트를 감싸는 div
 export const InfoLogo = styled.div`
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 10px;
 `;
+
 // 상세 정보창 하단 왼쪽에 들어갈 영화 로고를 감싸는 div
 export const LogoContainer = styled.div`
     height: 100%;
@@ -111,17 +123,20 @@ export const LogoContainer = styled.div`
     align-items: center;
     justify-content: center;
 `;
+
 // 상세 정보창 하단 왼쪽에 들어갈 영화 로고
 export const Logo = styled.img`
     background-color: ${(props) => props.theme.white.lighter};
     width: 50px;
     height: 50px;
 `;
+
 // 상세 정보창 하단 오른쪽에 들어갈 영화 줄거리
 export const InfoOverView = styled.p`
     padding: 20px;
     color: ${(props) => props.theme.white.lighter};
 `;
+
 // Div를 구분하는 수직 구분선
 export const HorizonBar = styled.div`
     background-color: ${(props) => props.theme.white.lighter};

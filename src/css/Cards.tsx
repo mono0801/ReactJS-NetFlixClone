@@ -10,6 +10,7 @@ export const CardsWrapper = styled.div`
     margin-right: 60px;
     position: relative;
 `;
+
 // Card 슬라이드 상단
 export const Cardsheader = styled.div`
     width: 100%;
@@ -17,17 +18,20 @@ export const Cardsheader = styled.div`
     justify-content: space-between;
     align-items: center;
 `;
+
 // Card 슬라이드 상단에 들어갈 슬라이더 이름
 export const CardsTitle = styled.h4`
     font-size: 150%;
     font-weight: bolder;
 `;
+
 // Card 슬라이드 화살표를 감싸는 Div
 export const CardsArrowContainer = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
 `;
+
 // Card 슬라이드 화살표 전체를 감싸는 Div
 export const CardsArrow = styled(motion.div)`
     display: flex;
@@ -36,6 +40,7 @@ export const CardsArrow = styled(motion.div)`
     font-size: 175%;
     cursor: pointer;
 `;
+
 // 슬라이드의 Index가 현재 몇번째인지 알려주는 span
 export const Index = styled.span`
     font-size: 125%;
@@ -45,6 +50,7 @@ export const Index = styled.span`
     justify-content: center;
     align-items: center;
 `;
+
 // 슬라이드에 들어갈 div
 export const Slider = styled(motion.div)<{ offset: number }>`
     margin-top: 15px;
@@ -63,6 +69,7 @@ export const Slider = styled(motion.div)<{ offset: number }>`
         transform-origin: center right;
     }
 `;
+
 // Card 슬라이드 화살표 애니메이션 설정
 export const CardsArrowVariant = {
     nomal: {

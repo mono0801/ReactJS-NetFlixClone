@@ -8,6 +8,7 @@ import {
     getUpcomingMovies,
     IGetMoviesResult,
 } from "../api";
+import { Helmet } from "react-helmet";
 import Banner from "../Components/Banner";
 import Loading from "../Components/Loading";
 import Cards from "../Components/List/MovieCards";
@@ -33,6 +34,9 @@ function Home() {
                 <Loading />
             ) : (
                 <>
+                    <Helmet>
+                        <title>Netflix Clone</title>
+                    </Helmet>
                     <Banner
                         category="movie"
                         videoId={nowPlaying?.results[0].id}

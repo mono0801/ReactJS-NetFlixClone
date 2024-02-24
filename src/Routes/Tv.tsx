@@ -48,19 +48,19 @@ function Tv() {
                             <style.CardsWrapper>
                                 <style.CardsContainer>
                                     <Cards
-                                        data={popular}
-                                        cardsName="Popular"
-                                        tagName="Popular"
-                                        cut={1}
+                                        data={airingToday}
+                                        cardsName="Airing Today"
+                                        tagName="AiringToday"
+                                        cut={0}
                                         top="-200px"
                                     />
                                 </style.CardsContainer>
                                 <style.CardsContainer>
                                     <Cards
-                                        data={airingToday}
-                                        cardsName="Airing Today"
-                                        tagName="AiringToday"
-                                        cut={0}
+                                        data={popular}
+                                        cardsName="Popular"
+                                        tagName="Popular"
+                                        cut={1}
                                         top="-175px"
                                     />
                                 </style.CardsContainer>
