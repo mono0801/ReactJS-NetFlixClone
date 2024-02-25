@@ -3,7 +3,6 @@ import { styled } from "styled-components";
 
 export const Wrapper = styled.div`
     min-width: 530px;
-    height: 200vh;
     background: black;
     overflow-x: hidden;
 `;

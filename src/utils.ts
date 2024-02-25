@@ -8,11 +8,13 @@ import notFound from "./assets/images/image_not_found.png";
  @param width 해당 영화 포스터의 너비
  @returns 해당 영화 포스터 값 반환
  */
-export function makeImagePath(id: string, width?: string) {
-    if (id === "" || id === null || id === undefined) {
+export function makeImagePath(path: string, width?: string) {
+    if (path == "" || path == null || path == undefined) {
         return notFound;
     } else {
-        return `https://image.tmdb.org/t/p/${width ? width : "original"}/${id}`;
+        return `https://image.tmdb.org/t/p/${
+            width ? width : "original"
+        }/${path}`;
     }
 }
 

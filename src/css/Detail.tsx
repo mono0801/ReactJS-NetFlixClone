@@ -55,6 +55,8 @@ export const InfoPosterWrapper = styled.div`
 
 // 상세 정보창 상단 왼쪽에 들어갈 영화 포스터
 export const InfoPoster = styled.img`
+    width: 200px;
+    height: 300px;
     margin-left: 20px;
 `;
 

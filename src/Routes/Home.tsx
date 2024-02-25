@@ -17,11 +17,11 @@ import * as style from "../css/style";
 
 function Home() {
     // themoviedb.org로 부터 가져온 영화 정보
-    const { data: nowPlaying, isLoading: nowPlayingLoding } =
+    const { data: nowPlaying, isLoading: nowPlayingLoading } =
         useQuery<IGetMoviesResult>(["movies", "nowPlaying"], getMovies);
-    const { data: topRated, isLoading: topRatedLoding } =
+    const { data: topRated, isLoading: topRatedLoading } =
         useQuery<IGetMoviesResult>(["movies", "topRated"], getTopRatedMovies);
-    const { data: upComing, isLoading: upComingLoding } =
+    const { data: upComing, isLoading: upComingLoading } =
         useQuery<IGetMoviesResult>(["movies", "upComing"], getUpcomingMovies);
     // 현재 우리가 어느 route에 있는지 확인한다
     const detailMovieMatch: PathMatch<string> | null = useMatch(
@@ -30,7 +30,7 @@ function Home() {
 
     return (
         <style.Wrapper>
-            {nowPlayingLoding && topRatedLoding && upComingLoding ? (
+            {nowPlayingLoading && topRatedLoading && upComingLoading ? (
                 <Loading />
             ) : (
                 <>

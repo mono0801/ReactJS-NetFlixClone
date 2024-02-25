@@ -49,7 +49,7 @@ function MovieDetail({
                 <detail.InfoCover
                     style={{
                         backgroundImage: `linear-gradient(to top,black, transparent), url(${makeImagePath(
-                            String(data?.backdrop_path),
+                            String(data?.backdrop_path || ""),
                             ""
                         )})`,
                     }}
@@ -57,7 +57,7 @@ function MovieDetail({
                     <detail.InfoPosterWrapper>
                         <detail.InfoPoster
                             src={makeImagePath(
-                                String(data?.poster_path),
+                                String(data?.poster_path || ""),
                                 "w200"
                             )}
                         />

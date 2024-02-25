@@ -26,8 +26,8 @@ function MovieCards({
     top,
 }: {
     data: IGetMoviesResult;
-    cardsName: "Now Playing" | "Top Rated" | "Up Coming";
-    tagName: "NowPlaying" | "TopRated" | "UpComing";
+    cardsName: "Now Playing" | "Top Rated" | "Up Coming" | "Popular";
+    tagName: "NowPlaying" | "TopRated" | "UpComing" | "Popular";
     cut: number;
     top: string;
 }) {
