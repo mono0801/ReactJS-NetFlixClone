@@ -108,12 +108,6 @@ export function getTopRatedMovies() {
     ).then((response) => response.json());
 }
 // 상영될 영화 API로 정보 가져오기
-export function getPopularMovies() {
-    return fetch(
-        `${BASE_PATH}/movie/upcoming?language=ko&region=kr&api_key=${API_KEY}`
-    ).then((response) => response.json());
-}
-// 상영될 영화 API로 정보 가져오기
 export function getUpcomingMovies() {
     return fetch(
         `${BASE_PATH}/movie/popular?language=ko&region=kr&api_key=${API_KEY}`
