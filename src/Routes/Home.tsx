@@ -54,7 +54,7 @@ function Home() {
                                         cardsName="Now Playing"
                                         tagName="NowPlaying"
                                         cut={1}
-                                        top="-200px"
+                                        top="-140px"
                                     />
                                 </style.CardsContainer>
                                 <style.CardsContainer>
@@ -63,7 +63,7 @@ function Home() {
                                         cardsName="Up Coming"
                                         tagName="UpComing"
                                         cut={0}
-                                        top="-175px"
+                                        top="-105px"
                                     />
                                 </style.CardsContainer>
                                 <style.CardsContainer>
@@ -72,7 +72,7 @@ function Home() {
                                         cardsName="Top Rated"
                                         tagName="TopRated"
                                         cut={0}
-                                        top="-150px"
+                                        top="-70px"
                                     />
                                 </style.CardsContainer>
                             </style.CardsWrapper>

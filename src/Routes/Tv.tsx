@@ -52,7 +52,7 @@ function Tv() {
                                         cardsName="Airing Today"
                                         tagName="AiringToday"
                                         cut={0}
-                                        top="-200px"
+                                        top="-140px"
                                     />
                                 </style.CardsContainer>
                                 <style.CardsContainer>
@@ -61,7 +61,7 @@ function Tv() {
                                         cardsName="Popular"
                                         tagName="Popular"
                                         cut={1}
-                                        top="-175px"
+                                        top="-105px"
                                     />
                                 </style.CardsContainer>
                                 <style.CardsContainer>
@@ -70,7 +70,7 @@ function Tv() {
                                         cardsName="Top Rated"
                                         tagName="TopRated"
                                         cut={0}
-                                        top="-150px"
+                                        top="-70px"
                                     />
                                 </style.CardsContainer>
                             </style.CardsWrapper>

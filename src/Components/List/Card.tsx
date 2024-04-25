@@ -7,7 +7,7 @@ import { makeImagePath } from "../../utils";
 // 검색된 영화
 const Poster = styled(motion.div)<{ bgPhoto: string }>`
     width: 180px;
-    height: 270px;
+    height: 280px;
     background-color: ${(props) => props.theme.black.lighter};
     background-image: url(${(props) => props.bgPhoto});
     background-size: cover;
