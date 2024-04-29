@@ -24,8 +24,6 @@ function Footer() {
     return (
         <FooterLink>
             <FooterContainer>
-                <FooterSpan>Moblie</FooterSpan>
-                <span style={{ padding: "0px 10px" }}>|</span>
                 <FooterSpan>
                     <Link to={`https://github.com/mono0801`} target="_blank">
                         GitHub
