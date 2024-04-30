@@ -3,7 +3,7 @@ import { AnimatePresence } from "framer-motion";
 import { useRef, useState } from "react";
 import { IoIosArrowDropright, IoIosArrowDropleft } from "react-icons/io";
 import { IGetTvResult } from "../../api";
-import { useWindowDimensions } from "../../utils";
+import { changeOffset, useWindowDimensions } from "../../utils";
 import * as Cards from "../../css/Cards";
 import Card from "./Card";
 
@@ -43,25 +43,16 @@ function TvCards({
     // offset : 한 슬라이드에 보여줄 Card 갯수
     let offset = 8;
     // 반응형으로 설정
-    if (1870 <= window.innerWidth) {
-        offset = 8;
-    } else if (1650 <= window.innerWidth && window.innerWidth < 1870) {
-        offset = 7;
-    } else if (1425 <= window.innerWidth && window.innerWidth < 1650) {
-        offset = 6;
-    } else if (1200 <= window.innerWidth && window.innerWidth < 1425) {
-        offset = 5;
-    } else if (975 <= window.innerWidth && window.innerWidth < 1200) {
-        offset = 4;
-    } else if (752 <= window.innerWidth && window.innerWidth < 975) {
-        offset = 3;
-    } else {
-        offset = 2;
-    }
+    offset = changeOffset(window.innerWidth);
     // 가져온 영화 갯수
     const totalMovies = data.results.length - 1;
     // 가져온 영화 갯수 / offset : 보여줘야될 Slider 갯수
     const maxIndex = Math.ceil(totalMovies / offset) - 1;
+    // 윈도우 너비가 변하면서 현재 Index가 maxIndex를 넘어설 경우 Index를 변경된 maxIndex로 변경
+    if (maxIndex < index) {
+        toggleLeaving();
+        setIndex(maxIndex);
+    }
     // index 증가
     const increaseIndex = () => {
         if (data) {
