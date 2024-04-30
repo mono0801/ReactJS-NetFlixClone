@@ -76,6 +76,7 @@ const CardContainer = styled.div<{ offset: number }>`
     width: 100%;
     height: auto;
     min-height: 28vh;
+    margin-bottom: 30px;
     display: grid;
     grid-template-columns: repeat(${(props) => props.offset}, 200px);
     grid-gap: 40px;

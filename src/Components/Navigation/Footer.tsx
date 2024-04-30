@@ -1,22 +1,35 @@
 // 하단 Footer
 
+import { Link, useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
 
 const FooterLink = styled.footer`
     width: 100%;
     height: 40px;
-    padding-bottom: 10px;
+    padding-bottom: 30px;
     display: flex;
     justify-content: center;
     align-items: center;
     position: absolute;
 `;
+const FooterContainer = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+`;
+const FooterSpan = styled.h4`
+    font-size: 150%;
+`;
 function Footer() {
     return (
         <FooterLink>
-            <div>
-                <h4>Moblie</h4>
-            </div>
+            <FooterContainer>
+                <FooterSpan>
+                    <Link to={`https://github.com/mono0801`} target="_blank">
+                        GitHub
+                    </Link>
+                </FooterSpan>
+            </FooterContainer>
         </FooterLink>
     );
 }
