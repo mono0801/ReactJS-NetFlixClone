@@ -1,11 +1,11 @@
 {
   "files": {
-    "main.js": "/ReactJS-NetFlixClone/static/js/main.aaf11dec.js",
+    "main.js": "/ReactJS-NetFlixClone/static/js/main.567c5e56.js",
     "static/media/image_not_found.png": "/ReactJS-NetFlixClone/static/media/image_not_found.295cf90aa4bc156e1ea4.png",
     "index.html": "/ReactJS-NetFlixClone/index.html",
-    "main.aaf11dec.js.map": "/ReactJS-NetFlixClone/static/js/main.aaf11dec.js.map"
+    "main.567c5e56.js.map": "/ReactJS-NetFlixClone/static/js/main.567c5e56.js.map"
   },
   "entrypoints": [
-    "static/js/main.aaf11dec.js"
+    "static/js/main.567c5e56.js"
   ]
 }
