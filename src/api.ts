@@ -3,7 +3,7 @@
 // https://api.themoviedb.org/3/tv/popular?language=ko&api_key=48325c3d1892253f6a5bb8d5d4d7cd0e
 // https://api.themoviedb.org/3/search/movie?query={}&api_key=48325c3d1892253f6a5bb8d5d4d7cd0e
 // https://api.themoviedb.org/3/search/tv?query={}&language=ko&api_key=48325c3d1892253f6a5bb8d5d4d7cd0e
-const API_KEY = "48325c3d1892253f6a5bb8d5d4d7cd0e";
+const API_KEY = "478e78dbcd81b88360a032ff5d31c939";
 const BASE_PATH = "https://api.themoviedb.org/3/";
 
 // API로 가져온 영화 목록 중 개별 정보 형식 지정
