@@ -98,37 +98,37 @@ export interface IGetDetailTvResult {
 // 현재 상영 영화 API로 정보 가져오기
 export function getMovies() {
     return fetch(
-        `${BASE_PATH}/movie/now_playing?language=ko&region=kr&api_key=${API_KEY}`
+        `${BASE_PATH}movie/now_playing?language=ko&region=kr&api_key=${API_KEY}`
     ).then((response) => response.json());
 }
 // 누적 시청 수가 가장 높은 영화 API로 정보 가져오기
 export function getTopRatedMovies() {
     return fetch(
-        `${BASE_PATH}/movie/top_rated?language=ko&region=kr&api_key=${API_KEY}`
+        `${BASE_PATH}movie/top_rated?language=ko&region=kr&api_key=${API_KEY}`
     ).then((response) => response.json());
 }
 // 상영될 영화 API로 정보 가져오기
 export function getUpcomingMovies() {
     return fetch(
-        `${BASE_PATH}/movie/popular?language=ko&region=kr&api_key=${API_KEY}`
+        `${BASE_PATH}movie/popular?language=ko&region=kr&api_key=${API_KEY}`
     ).then((response) => response.json());
 }
 // 인기있는 TV API로 정보 가져오기
 export function getTves() {
     return fetch(
-        `${BASE_PATH}/tv/popular?language=ko&region=kr&api_key=${API_KEY}`
+        `${BASE_PATH}tv/popular?language=ko&region=kr&api_key=${API_KEY}`
     ).then((response) => response.json());
 }
 // 현재 방영 TV API로 정보 가져오기
 export function getTopRatedTves() {
     return fetch(
-        `${BASE_PATH}/tv/top_rated?language=ko&region=kr&api_key=${API_KEY}`
+        `${BASE_PATH}tv/top_rated?language=ko&region=kr&api_key=${API_KEY}`
     ).then((response) => response.json());
 }
 // Airing Today TV API로 정보 가져오기
 export function getAiringTodayTves() {
     return fetch(
-        `${BASE_PATH}/tv/airing_today?language=ko&region=kr&api_key=${API_KEY}`
+        `${BASE_PATH}tv/airing_today?language=ko&region=kr&api_key=${API_KEY}`
     ).then((response) => response.json());
 }
 /**
